@@ -3,4 +3,7 @@
 \.chg\..*$
 \.rej$
 \.conflict\~$
+\.classpath$
+\.project$
+\.settings/.*
 target
