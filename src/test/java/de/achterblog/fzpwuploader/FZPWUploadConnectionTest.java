@@ -165,12 +165,15 @@ public class FZPWUploadConnectionTest {
   }
 
   public static final class TestServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       doPost(req, resp);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       if (req.getContentType() != null && req.getContentType().startsWith("multipart/form-data")) {
         try {
