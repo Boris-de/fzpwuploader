@@ -40,7 +40,7 @@ public interface UploadConnection {
     LOGGED_OUT,
     /** The login was refused by the server (wrong password, invalid user, ...) */
     REFUSED,
-    /** The login-status could not be recognized */
+    /** The login-status could not be recognised */
     UNKNOWN,
     /** The connection is disconnected (can be before or after a connection) */
     DISCONNECTED;
@@ -51,7 +51,7 @@ public interface UploadConnection {
    * @param user The user that should be logged in
    * @param password The password for this user
    * @return The status of the login, see {@link LoginStatus}
-   * @throws java.io.IOException Can be forwared if it occurs within the login-process
+   * @throws java.io.IOException Can be forwarded if it occurs within the login-process
    * @throws IllegalStateException If the connection is already logged in
    */
   @CheckReturnValue(priority = Priority.LOW, explanation = "You should always check if the login was successful or unknown. And handle the unknown-status")
@@ -65,7 +65,7 @@ public interface UploadConnection {
    * @throws UploadException If something goes wrong in the upload
    * @throws java.io.FileNotFoundException If the file to be uploaded does not exist
    * @throws java.lang.IllegalStateException If the user was not logged in
-   * @throws java.io.IOException Can be forwared if it occurs within the upload
+   * @throws java.io.IOException Can be forwarded if it occurs within the upload
    */
   public String upload(@NonNull File file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
 
@@ -75,7 +75,7 @@ public interface UploadConnection {
    * Calling this method more than once should be possible and it must be possible to call it with
    * any current loginStatus.
    *
-   * @return {@code true} if successful, {@code false} if an error happend (aside from an
+   * @return {@code true} if successful, {@code false} if an error happened (aside from an
    *         Exception, e.g. the answer was not unknown to the implementation)
    * @throws java.io.IOException Can be forwarded if the logout throws this
    */
