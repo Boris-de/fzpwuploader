@@ -8,10 +8,11 @@ import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.core.status.ErrorStatus;
 
 /**
+ * A simple appender that logs Strings to a StringBuffer.
  *
  * @author boris
  */
-public class StringBufferAppender extends AppenderBase {
+public class StringBufferAppender<E> extends AppenderBase<E> {
   private int maxSize = 1024 * 1024;
   private static final StringBuffer buffer = new StringBuffer();
 
@@ -20,7 +21,7 @@ public class StringBufferAppender extends AppenderBase {
   }
 
   @Override
-  protected void append(Object eventObject) {
+  protected void append(E eventObject) {
     buffer.append(this.layout.doLayout(eventObject));
     if (buffer.length() > maxSize) {
       synchronized (buffer) {

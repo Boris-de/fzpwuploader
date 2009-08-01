@@ -20,10 +20,12 @@
 package de.achterblog.fzpwuploader;
 
 /**
- *
+ * 
  * @author boris
  */
 public class UploadException extends Exception {
+  private static final long serialVersionUID = -216314219211415219L;
+
   protected UploadException(String message) {
     super(message);
   }

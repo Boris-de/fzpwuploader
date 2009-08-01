@@ -19,14 +19,15 @@
  */
 package de.achterblog.fzpwuploader;
 
-import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.jcip.annotations.NotThreadSafe;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.NameValuePair;
