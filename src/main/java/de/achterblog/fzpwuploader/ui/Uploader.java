@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileFilter;
+import org.jdesktop.swingworker.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +59,7 @@ public class Uploader extends javax.swing.JFrame {
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
+    java.awt.GridBagConstraints gridBagConstraints;
 
     jScrollPane1 = new javax.swing.JScrollPane();
     lableUser = new javax.swing.JLabel();
@@ -76,17 +77,49 @@ public class Uploader extends javax.swing.JFrame {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setTitle("Uploader");
+    getContentPane().setLayout(new java.awt.GridBagLayout());
 
     fileList.setModel(FileListModel.EMPTY_MODEL);
     jScrollPane1.setViewportView(fileList);
 
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 2;
+    gridBagConstraints.gridheight = 8;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    getContentPane().add(jScrollPane1, gridBagConstraints);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    getContentPane().add(textFieldUsername, gridBagConstraints);
+
     lableUser.setLabelFor(textFieldUsername);
     lableUser.setText("User:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    getContentPane().add(lableUser, gridBagConstraints);
 
     labelPassword.setLabelFor(textFieldPassword);
     labelPassword.setText("Password:");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    getContentPane().add(labelPassword, gridBagConstraints);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    getContentPane().add(textFieldPassword, gridBagConstraints);
 
     progressBar.setStringPainted(true);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 7;
+    gridBagConstraints.gridwidth = 4;
+    getContentPane().add(progressBar, gridBagConstraints);
 
     buttonSelect.setText("Select...");
     buttonSelect.addActionListener(new java.awt.event.ActionListener() {
@@ -94,6 +127,10 @@ public class Uploader extends javax.swing.JFrame {
         buttonSelectActionPerformed(evt);
       }
     });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 8;
+    getContentPane().add(buttonSelect, gridBagConstraints);
 
     buttonUpload.setText("Upload");
     buttonUpload.addActionListener(new java.awt.event.ActionListener() {
@@ -101,13 +138,30 @@ public class Uploader extends javax.swing.JFrame {
         buttonUploadActionPerformed(evt);
       }
     });
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 3;
+    gridBagConstraints.gridy = 8;
+    getContentPane().add(buttonUpload, gridBagConstraints);
 
     urlOutputArea.setColumns(20);
     urlOutputArea.setEditable(false);
     urlOutputArea.setRows(5);
     jScrollPane2.setViewportView(urlOutputArea);
 
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 4;
+    gridBagConstraints.gridheight = 6;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    getContentPane().add(jScrollPane2, gridBagConstraints);
+
     activityProgressBar.setIndeterminate(true);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 4;
+    gridBagConstraints.gridy = 8;
+    gridBagConstraints.gridwidth = 2;
+    getContentPane().add(activityProgressBar, gridBagConstraints);
 
     menuFile.setText("File");
 
@@ -144,68 +198,13 @@ public class Uploader extends javax.swing.JFrame {
 
     setJMenuBar(menuBar);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(lableUser)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(textFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(14, 14, 14)
-            .addComponent(labelPassword)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(buttonSelect)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonUpload)
-                .addGap(18, 18, 18)
-                .addComponent(activityProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
-              .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))))
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(lableUser)
-          .addComponent(textFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(labelPassword)
-          .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(buttonSelect)
-                .addComponent(buttonUpload))
-              .addComponent(activityProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(7, 7, 7))
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
-        .addContainerGap())
-    );
-
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
   private void buttonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectActionPerformed
     List<File> files;
     JFileChooser chooser = new JFileChooser();
-    FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "jpeg");
+    FileFilter filter = new FileNameExtensionFilter("Images", "jpg", "jpeg");
     chooser.setFileFilter(filter);
     chooser.setMultiSelectionEnabled(true);
     ImagePreviewAccessory preview = new ImagePreviewAccessory();
@@ -242,7 +241,6 @@ public class Uploader extends javax.swing.JFrame {
 
       SwingWorker<String, Integer> task = new BackgroundUpload(list);
       task.addPropertyChangeListener(new PropertyChangeListener() {
-        @Override
         public void propertyChange(PropertyChangeEvent evt) {
           if ("progress".equals(evt.getPropertyName())) {
             progressBar.setValue((Integer) evt.getNewValue());
@@ -275,7 +273,6 @@ public class Uploader extends javax.swing.JFrame {
       logger.warn("Error setting native LaF", e);
     }
     java.awt.EventQueue.invokeLater(new Runnable() {
-      @Override
       public void run() {
         new Uploader().setVisible(true);
       }
@@ -311,7 +308,6 @@ public class Uploader extends javax.swing.JFrame {
       this.fileList = fileList;
     }
 
-    @Override
     public String doInBackground() {
       final String username = textFieldUsername.getText();
       final String password = new String(textFieldPassword.getPassword());
@@ -330,12 +326,10 @@ public class Uploader extends javax.swing.JFrame {
     }
 
     private final class UploadBatchCallbackImpl implements UploadBatchCallback {
-      @Override
       public void uploaded(File uploaded) {
         setProgress(uploadCount.incrementAndGet());
       }
 
-      @Override
       public void failed(File cur) {
         // TODO: show an error somewhere
         setProgress(uploadCount.incrementAndGet());

@@ -43,12 +43,14 @@ public class AboutBox extends JDialog {
   @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
+    java.awt.GridBagConstraints gridBagConstraints;
 
     jTabbedPane1 = new javax.swing.JTabbedPane();
     jPanel1 = new javax.swing.JPanel();
     copyrightLabel = new javax.swing.JLabel();
     apacheNoticeLabel = new javax.swing.JLabel();
     qosNoticeLabel = new javax.swing.JLabel();
+    jLabel1 = new javax.swing.JLabel();
     jPanel2 = new javax.swing.JPanel();
     jScrollPane1 = new javax.swing.JScrollPane();
     licenseTextArea = new javax.swing.JTextArea();
@@ -59,48 +61,55 @@ public class AboutBox extends JDialog {
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("About");
     setResizable(false);
+    getContentPane().setLayout(new java.awt.GridLayout());
+
+    jPanel1.setLayout(new java.awt.GridBagLayout());
 
     javaLabel.setText("Running Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor"));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    jPanel1.add(javaLabel, gridBagConstraints);
 
     osLabel.setText("System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " running on " + System.getProperty("os.arch"));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    jPanel1.add(osLabel, gridBagConstraints);
 
     copyrightLabel.setText("<html>© 2009 achterblog.de<br>This tool is published under the terms of the GPLv2 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    jPanel1.add(copyrightLabel, gridBagConstraints);
 
     apacheNoticeLabel.setText("<html>This product includes software developed by<br>The Apache Software Foundation (http://www.apache.org/).");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    jPanel1.add(apacheNoticeLabel, gridBagConstraints);
 
     qosNoticeLabel.setText("<html>This product includes software developed by qos.ch<br>which is Copyright (c) 2004-2008 QOS.ch  All rights reserved.");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 4;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    jPanel1.add(qosNoticeLabel, gridBagConstraints);
 
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(javaLabel)
-          .addComponent(osLabel)
-          .addComponent(copyrightLabel)
-          .addComponent(apacheNoticeLabel)
-          .addComponent(qosNoticeLabel))
-        .addContainerGap(13, Short.MAX_VALUE))
-    );
-    jPanel1Layout.setVerticalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(javaLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(osLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(copyrightLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(apacheNoticeLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(qosNoticeLabel)
-        .addContainerGap(17, Short.MAX_VALUE))
-    );
+    jLabel1.setText("<html>This product includes software developed by Sun Microsystems<br>which is Copyright (c) 2005 Sun Microsystems, Inc.<br>and kindly was licensed under the terms of the LGPL");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 5;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+    jPanel1.add(jLabel1, gridBagConstraints);
 
     jTabbedPane1.addTab("General", jPanel1);
+
+    jPanel2.setLayout(new java.awt.GridLayout());
 
     licenseTextArea.setColumns(20);
     licenseTextArea.setEditable(false);
@@ -109,65 +118,22 @@ public class AboutBox extends JDialog {
     licenseTextArea.setText(getLicenseText());
     jScrollPane1.setViewportView(licenseTextArea);
 
-    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-    jPanel2.setLayout(jPanel2Layout);
-    jPanel2Layout.setHorizontalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-        .addContainerGap())
-    );
-    jPanel2Layout.setVerticalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+    jPanel2.add(jScrollPane1);
 
     jTabbedPane1.addTab("License", jPanel2);
+
+    jPanel3.setLayout(new java.awt.GridLayout());
 
     bundledLicensesTextArea.setColumns(20);
     bundledLicensesTextArea.setRows(5);
     bundledLicensesTextArea.setText(getBundledLicensesText());
     jScrollPane2.setViewportView(bundledLicensesTextArea);
 
-    javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-    jPanel3.setLayout(jPanel3Layout);
-    jPanel3Layout.setHorizontalGroup(
-      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel3Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-        .addContainerGap())
-    );
-    jPanel3Layout.setVerticalGroup(
-      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel3Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+    jPanel3.add(jScrollPane2);
 
     jTabbedPane1.addTab("Bundled Licenses", jPanel3);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+    getContentPane().add(jTabbedPane1);
 
     pack();
   }// </editor-fold>//GEN-END:initComponents
@@ -177,7 +143,6 @@ public class AboutBox extends JDialog {
    */
   public static void main(String args[]) {
     java.awt.EventQueue.invokeLater(new Runnable() {
-      @Override
       public void run() {
         AboutBox dialog = new AboutBox(new javax.swing.JFrame(), true);
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -219,6 +184,7 @@ public class AboutBox extends JDialog {
   private javax.swing.JLabel apacheNoticeLabel;
   private javax.swing.JTextArea bundledLicensesTextArea;
   private javax.swing.JLabel copyrightLabel;
+  private javax.swing.JLabel jLabel1;
   private javax.swing.JPanel jPanel1;
   private javax.swing.JPanel jPanel2;
   private javax.swing.JPanel jPanel3;

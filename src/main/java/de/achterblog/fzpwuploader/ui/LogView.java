@@ -48,6 +48,7 @@ public class LogView extends JDialog {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     setTitle("Log");
+    getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
     jTextArea1.setColumns(20);
     jTextArea1.setEditable(false);
@@ -55,22 +56,7 @@ public class LogView extends JDialog {
     jTextArea1.setText(StringBufferAppender.getBuffer());
     jScrollPane1.setViewportView(jTextArea1);
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+    getContentPane().add(jScrollPane1);
 
     pack();
   }// </editor-fold>//GEN-END:initComponents

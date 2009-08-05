@@ -58,7 +58,6 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
     }
   }
 
-  @Override
   public int getSize() {
     return files.size();
   }
@@ -70,7 +69,6 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
    * @return The filename
    * @throws IndexOutOfBoundsException If {@code (index < 0 || index >= getSize())}
    */
-  @Override
   public String getElementAt(int index) throws IndexOutOfBoundsException {
     return files.get(index).getName();
   }
@@ -86,7 +84,6 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
     return files.get(index);
   }
 
-  @Override
   public Iterator<File> iterator() {
     return files.iterator();
   }

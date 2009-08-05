@@ -62,7 +62,6 @@ public class UploadBatch {
       Map<File, Future<String>> futures = new HashMap<File, Future<String>>();
       for (final File cur : fileList) {
         Future<String> f = exe.submit(new Callable<String>() {
-          @Override
           public String call() throws Exception {
             try {
               logger.debug("Starting upload for file {}", cur.getName());

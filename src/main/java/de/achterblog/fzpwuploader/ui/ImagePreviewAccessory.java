@@ -54,7 +54,6 @@ public class ImagePreviewAccessory extends JPanel implements PropertyChangeListe
     setMaximumSize(max);
   }
 
-  @Override
   public void propertyChange(PropertyChangeEvent event) {
     if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(event.getPropertyName())) {
       File file = (File) event.getNewValue();

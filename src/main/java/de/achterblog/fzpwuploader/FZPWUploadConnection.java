@@ -65,7 +65,6 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
     this.baseUrl = baseUrl;
   }
 
-  @Override
   public LoginStatus login(String user, String password) throws IOException, UploadException {
     if (loginStatus == LoginStatus.LOGGED_IN) {
       throw new IllegalStateException("Cannot login twice");
@@ -95,7 +94,6 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
     return loginStatus;
   }
 
-  @Override
   public String upload(File file) throws FileNotFoundException, IOException, UploadException {
     String url = baseUrl + "?az=upload_file&forum=";
     PostMethod post = new PostMethod(url);
@@ -124,7 +122,6 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
     }
   }
 
-  @Override
   public boolean logout() {
     try {
       GetMethod get = new GetMethod(baseUrl + "?az=logout");
@@ -142,13 +139,11 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
     }
   }
 
-  @Override
   public void disconnect() {
     state.clear();
     loginStatus = LoginStatus.DISCONNECTED;
   }
 
-  @Override
   public LoginStatus getLoginStatus() {
     return loginStatus;
   }
