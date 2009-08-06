@@ -24,6 +24,7 @@ import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -264,23 +265,6 @@ public class Uploader extends javax.swing.JFrame {
     private void menuItemLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogActionPerformed
       new LogView(this, true).setVisible(true);
 }//GEN-LAST:event_menuItemLogActionPerformed
-
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String args[]) throws InterruptedException {
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
-      logger.warn("Error setting native LaF", e);
-    }
-    java.awt.EventQueue.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        new Uploader().setVisible(true);
-      }
-    });
-  }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JProgressBar activityProgressBar;

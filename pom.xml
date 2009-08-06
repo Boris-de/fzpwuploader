@@ -9,7 +9,7 @@
   <url>http://achterblog.de</url>
 
   <properties>
-    <mainClass>de.achterblog.fzpwuploader.ui.Uploader</mainClass>
+    <mainClass>de.achterblog.fzpwuploader.Launcher</mainClass>
   </properties>
   
   <build>
