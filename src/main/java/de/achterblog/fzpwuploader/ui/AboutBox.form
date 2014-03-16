@@ -8,6 +8,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -67,7 +68,7 @@
                           <Component id="apacheNoticeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="qosNoticeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="13" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -112,7 +113,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="copyrightLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa9; 2009-2014 achterblog.de&lt;br&gt;This tool is published under the terms of the GPLv2 or later.&lt;br&gt;See tabs &quot;License&quot; and &quot;Bundled Licenses&quot; for details."/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa9; 2009-2014 achterblog.de&lt;br&gt;This tool is published under the terms of the GPLv3 or later.&lt;br&gt;See tabs &quot;License&quot; and &quot;Bundled Licenses&quot; for details."/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="apacheNoticeLabel">
