@@ -1,60 +1,44 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of the FZPWUploader
+ *
+ * Copyright (C) 2009-2014 achterblog.de
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package de.achterblog.util;
 
-import ch.qos.logback.core.AppenderBase;
-import ch.qos.logback.core.status.ErrorStatus;
+import ch.qos.logback.core.OutputStreamAppender;
+import java.nio.charset.Charset;
+import org.apache.commons.io.output.WriterOutputStream;
 
 /**
- * A simple appender that logs Strings to a StringBuffer.
+ * A simple appender that logs Strings to a static StringBuffer.
  *
  * @author boris
+ * @param <E> The param used for the {@link ch.qos.logback.core.Appender}
  */
-public class StringBufferAppender<E> extends AppenderBase<E> {
-  private int maxSize = 1024 * 1024;
-  private static final StringBuffer buffer = new StringBuffer();
+public class StringBufferAppender<E> extends OutputStreamAppender<E> {
+  private static final MaxLengthStringBufferWriter writer = new MaxLengthStringBufferWriter(1024 * 1024);
 
   public static String getBuffer() {
-    return buffer.toString();
-  }
-
-  @Override
-  protected void append(E eventObject) {
-    buffer.append(this.layout.doLayout(eventObject));
-    if (buffer.length() > maxSize) {
-      synchronized (buffer) {
-        int size = buffer.length();
-        // check if it's still this size
-        if (size > maxSize) {
-          int cutIndex = buffer.indexOf("\n", size - maxSize);
-          cutIndex = (cutIndex < 0) ? size - maxSize : cutIndex;
-          buffer.delete(0, cutIndex);
-        }
-      }
-    }
+    return writer.toString();
   }
 
   @Override
   public void start() {
-    int errors = 0;
-    if (this.layout == null) {
-      addStatus(new ErrorStatus("No layout set for the appender named \"" + name + "\".", this));
-      errors++;
-    }
-
-    // only error free appenders should be activated
-    if (errors == 0) {
-      super.start();
-    }
-  }
-
-  public void setMaxSize(int maxSize) {
-    this.maxSize = maxSize;
-  }
-
-  public int getMaxSize() {
-    return maxSize;
+    setOutputStream(new WriterOutputStream(writer, Charset.defaultCharset()));
+    super.start();
   }
 }
