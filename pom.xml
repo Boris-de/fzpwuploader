@@ -16,6 +16,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
@@ -26,6 +27,7 @@
 
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>2.2</version>
         <configuration>
           <archive>
             <manifest>
@@ -38,6 +40,7 @@
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2-beta-3</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -61,6 +64,7 @@
       <plugin>
         <groupId>org.codehaus.mojo.webstart</groupId>
         <artifactId>webstart-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -175,6 +179,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
         <configuration>
           <linksource>true</linksource>
           <links>
@@ -187,6 +192,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
           <formats>
             <format>html</format>
@@ -196,6 +202,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
+        <version>2.5.3</version>
         <configuration>
           <xmlOutput>false</xmlOutput>
           <threshold>Low</threshold>

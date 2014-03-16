@@ -64,7 +64,7 @@ public class AboutBox extends JDialog {
 
     osLabel.setText("System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " running on " + System.getProperty("os.arch"));
 
-    copyrightLabel.setText("<html>© 2009 achterblog.de<br>This tool is published under the terms of the GPLv2 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
+    copyrightLabel.setText("<html>© 2009-2014 achterblog.de<br>This tool is published under the terms of the GPLv2 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
 
     apacheNoticeLabel.setText("<html>This product includes software developed by<br>The Apache Software Foundation (http://www.apache.org/).");
 
