@@ -68,7 +68,7 @@ public class AboutBox extends JDialog {
 
     apacheNoticeLabel.setText("<html>This product includes software developed by<br>The Apache Software Foundation (http://www.apache.org/).");
 
-    qosNoticeLabel.setText("<html>This product includes software developed by qos.ch<br>which is Copyright (c) 2004-2008 QOS.ch  All rights reserved.");
+    qosNoticeLabel.setText("<html>This product includes software developed by qos.ch<br>which is Copyright (c) 2004-2013 QOS.ch  All rights reserved.");
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
