@@ -130,10 +130,7 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
       GetMethod get = new GetMethod(baseUrl + "?az=logout");
       String response = readFromHttpMethod(client, get);
       return response.contains("Der User wurde auf diesem Rechner ausgeloggt...");
-    } catch (UploadException e) {
-      logger.info("Exception while logging out", e);
-      return false;
-    } catch (IOException e) {
+    } catch (UploadException | IOException e) {
       logger.info("Exception while logging out", e);
       return false;
     } finally {

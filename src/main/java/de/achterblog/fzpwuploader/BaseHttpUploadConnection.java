@@ -70,12 +70,8 @@ public abstract class BaseHttpUploadConnection implements UploadConnection {
         throw new UploadException("Unexpected http-return code: " + status);
       }
 
-      InputStream responseInputStream = method.getResponseBodyAsStream();
-
-      try {
+      try (InputStream responseInputStream = method.getResponseBodyAsStream()) {
         return Streams.toString(responseInputStream, charset);
-      } finally {
-        responseInputStream.close();
       }
     } catch (IOException e) {
       method.abort();

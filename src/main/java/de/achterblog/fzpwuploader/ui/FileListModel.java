@@ -51,7 +51,7 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
    */
   public FileListModel(List<File> files) {
     super();
-    this.files = Collections.unmodifiableList(new ArrayList<File>(files)); // defensive copy
+    this.files = Collections.unmodifiableList(new ArrayList<>(files)); // defensive copy
 
     if (this.files.contains(null)) {
       throw new IllegalStateException("files contains null");

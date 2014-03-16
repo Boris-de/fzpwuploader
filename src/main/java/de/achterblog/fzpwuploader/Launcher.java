@@ -24,6 +24,7 @@ import java.awt.HeadlessException;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -63,7 +64,7 @@ public class Launcher {
   private static void setLookAndFeel() {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (Exception e) {
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
       LoggerFactory.getLogger(Launcher.class).warn("Error setting native LaF", e);
     }
   }

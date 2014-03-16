@@ -122,9 +122,9 @@ public class FZPWUploadConnectionTest {
     final byte[] fileContents = new byte[]{(byte) 255, (byte) 216, (byte) 97, (byte) 255, (byte) 217};
 
     File tempFile = File.createTempFile("test", "tmp");
-    OutputStream out = new FileOutputStream(tempFile);
-    out.write(fileContents);
-    out.close();
+    try (OutputStream out = new FileOutputStream(tempFile)) {
+      out.write(fileContents);
+    }
 
     try {
       nextResponse = "Seite wird geladen, einen Moment bitte...";
@@ -135,16 +135,22 @@ public class FZPWUploadConnectionTest {
       assertThat(lastFileItems.size(), is(4));
       for (FileItem cur : lastFileItems) {
         String fieldName = cur.getFieldName();
-        if ("az".equals(fieldName)) {
-          assertEquals("upload_file", cur.getString());
-        } else if ("command".equals(fieldName)) {
-          assertEquals("save", cur.getString());
-        } else if ("file_type".equals(fieldName)) {
-          assertEquals("jpg", cur.getString());
-        } else if ("file_upload".equals(fieldName)) {
-          assertArrayEquals(fileContents, Streams.toBytes(cur.getInputStream()));
-        } else {
-          fail("Uexpected item: " + fieldName);
+        if (null != fieldName) switch (fieldName) {
+          case "az":
+            assertEquals("upload_file", cur.getString());
+            break;
+          case "command":
+            assertEquals("save", cur.getString());
+            break;
+          case "file_type":
+            assertEquals("jpg", cur.getString());
+            break;
+          case "file_upload":
+            assertArrayEquals(fileContents, Streams.toBytes(cur.getInputStream()));
+            break;
+          default:
+            fail("Uexpected item: " + fieldName);
+            break;
         }
       }
     } finally {
@@ -189,7 +195,7 @@ public class FZPWUploadConnectionTest {
 
       lastCookies = Arrays.asList(req.getCookies() != null ? req.getCookies() : new Cookie[0]);
 
-      lastRequestParameters = new HashMap<String, String>();
+      lastRequestParameters = new HashMap<>();
       for (Map.Entry<String, String[]> cur : ((Map<String, String[]>) req.getParameterMap()).entrySet()) {
         lastRequestParameters.put(cur.getKey(), cur.getValue()[0]);
       }
