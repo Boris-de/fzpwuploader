@@ -59,7 +59,7 @@ public class UploadBatch {
         return "Failed to login user " + this.username + ": " + loginStatus;
       }
       ExecutorService exe = Executors.newSingleThreadExecutor();
-      Map<File, Future<String>> futures = new HashMap<File, Future<String>>();
+      Map<File, Future<String>> futures = new HashMap<>();
       for (final File cur : fileList) {
         Future<String> f = exe.submit(new Callable<String>() {
           @Override
@@ -69,7 +69,7 @@ public class UploadBatch {
               String result = con.upload(cur);
               callback.uploaded(cur);
               return result;
-            } catch (Exception e) {
+            } catch (UploadException | IOException | IllegalStateException e) {
               callback.failed(cur);
               throw new UploadException(e.getMessage(), e);
             }
@@ -114,6 +114,6 @@ public class UploadBatch {
      *
      * @param uploaded The file that was <b>not</b> uploaded
      */
-    public void failed(File cur);
+    public void failed(File uploaded);
   }
 }

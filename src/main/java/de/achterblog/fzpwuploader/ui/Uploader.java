@@ -24,15 +24,14 @@ import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -307,7 +306,7 @@ public class Uploader extends javax.swing.JFrame {
       try {
         urlOutputArea.setText(get());
         activityProgressBar.setVisible(false);
-      } catch (Exception e) {
+      } catch (InterruptedException | ExecutionException e) {
         logger.error("Exception in Future.get()", e);
       }
       Uploader.this.setEnabled(true);
