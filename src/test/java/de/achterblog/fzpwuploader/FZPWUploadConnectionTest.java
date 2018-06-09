@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with FZPWUploader.  If not, see <http://www.gnu.org/licenses/>.
+ * along with FZPWUploader.  If not, see <https://www.gnu.org/licenses/>.
  */
 package de.achterblog.fzpwuploader;
 
@@ -128,7 +128,7 @@ public class FZPWUploadConnectionTest {
     try {
       nextResponse = "Seite wird geladen, einen Moment bitte...";
       connection.login("", "");
-      nextResponse = "http://Freizeitparkweb.de/dcf/User_files/1234567890abcdef.jpg";
+      nextResponse = "https://Freizeitparkweb.de/dcf/User_files/1234567890abcdef.jpg";
       String uploadedUrl = connection.upload(tempFile);
       assertEquals(uploadedUrl, nextResponse);
       assertThat(lastFileItems.size(), is(4));
