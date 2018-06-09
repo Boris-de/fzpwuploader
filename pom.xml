@@ -141,8 +141,8 @@
         <configuration>
           <linksource>true</linksource>
           <links>
-            <link>http://java.sun.com/javase/6/docs/api/</link>
-            <link>http://hc.apache.org/httpclient-3.x/apidocs/</link>
+            <link>https://java.sun.com/javase/6/docs/api/</link>
+            <link>https://hc.apache.org/httpclient-3.x/apidocs/</link>
           </links>
           <encoding>UTF-8</encoding>
         </configuration>

@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with FZPWUploader.  If not, see <http://www.gnu.org/licenses/>.
+ * along with FZPWUploader.  If not, see <https://www.gnu.org/licenses/>.
  */
 package de.achterblog.fzpwuploader;
 
@@ -55,7 +55,7 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
   private final String baseUrl;
 
   public FZPWUploadConnection() {
-    this("http://freizeitparkweb.de/cgi-bin/dcf/dcboard.cgi");
+    this("https://freizeitparkweb.de/cgi-bin/dcf/dcboard.cgi");
   }
 
   /** Package private constructor for the test-cases */
@@ -109,7 +109,7 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
     try {
       String response = readFromHttpMethod(client, post);
 
-      String patStr = "http://Freizeitparkweb.de/dcf/User_files/[\\da-f]+.jpg";
+      String patStr = "https?://Freizeitparkweb.de/dcf/User_files/[\\da-f]+.jpg";
       Matcher m = Pattern.compile(patStr, Pattern.CASE_INSENSITIVE).matcher(response);
       if (!m.find()) {
         logger.info("The servers-response was:\n" + response);

@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with FZPWUploader.  If not, see <http://www.gnu.org/licenses/>.
+ * along with FZPWUploader.  If not, see <https://www.gnu.org/licenses/>.
  */
 package de.achterblog.fzpwuploader.ui;
 
@@ -65,7 +65,7 @@ public class AboutBox extends JDialog {
 
     copyrightLabel.setText("<html>© 2009-2014 achterblog.de<br>This tool is published under the terms of the GPLv3 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
 
-    apacheNoticeLabel.setText("<html>This product includes software developed by<br>The Apache Software Foundation (http://www.apache.org/).");
+    apacheNoticeLabel.setText("<html>This product includes software developed by<br>The Apache Software Foundation (https://www.apache.org/).");
 
     qosNoticeLabel.setText("<html>This product includes software developed by qos.ch<br>which is Copyright (c) 2004-2013 QOS.ch  All rights reserved.");
 
@@ -194,7 +194,7 @@ public class AboutBox extends JDialog {
     try {
       return Streams.toString(AboutBox.class.getResourceAsStream("/COPYING"), "US-ASCII");
     } catch (IOException e) {
-      return "Could not read License. Visit http://www.gnu.org/licenses/old-licenses/gpl-2.0.html";
+      return "Could not read License. Visit https://www.gnu.org/licenses/old-licenses/gpl-2.0.html";
     }
   }
 
