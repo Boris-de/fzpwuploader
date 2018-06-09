@@ -9,7 +9,6 @@
   <url>http://achterblog.de</url>
 
   <properties>
-    <mainClass>de.achterblog.fzpwuploader.Launcher</mainClass>
     <version.slf4j>1.7.25</version.slf4j>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.jetty>9.4.11.v20180605</version.jetty>
@@ -29,39 +28,25 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>${mainClass}</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.1.0</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.0.2.RELEASE</version>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
-              <goal>assembly</goal>
+              <goal>repackage</goal>
             </goals>
+            <configuration>
+              <mainClass>de.achterblog.fzpwuploader.Launcher</mainClass>
+              <excludes>
+                <exclude>
+                  <groupId>findbugs</groupId>
+                  <artifactId>annotations</artifactId>
+                </exclude>
+              </excludes>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>${mainClass}</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
       </plugin>
     </plugins>
   </build>
