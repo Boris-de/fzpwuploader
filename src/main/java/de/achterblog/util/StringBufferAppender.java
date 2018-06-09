@@ -18,17 +18,19 @@
  */
 package de.achterblog.util;
 
-import ch.qos.logback.core.OutputStreamAppender;
-import java.nio.charset.Charset;
-import org.apache.commons.io.output.WriterOutputStream;
+import java.io.IOException;
+
+import ch.qos.logback.core.CoreConstants;
+import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import ch.qos.logback.core.spi.DeferredProcessingAware;
 
 /**
  * A simple appender that logs Strings to a static StringBuffer.
  *
- * @author boris
  * @param <E> The param used for the {@link ch.qos.logback.core.Appender}
+ * @author boris
  */
-public class StringBufferAppender<E> extends OutputStreamAppender<E> {
+public class StringBufferAppender<E> extends UnsynchronizedAppenderBase<E> {
   private static final MaxLengthStringBufferWriter writer = new MaxLengthStringBufferWriter(1024 * 1024);
 
   public static String getBuffer() {
@@ -36,8 +38,17 @@ public class StringBufferAppender<E> extends OutputStreamAppender<E> {
   }
 
   @Override
-  public void start() {
-    setOutputStream(new WriterOutputStream(writer, Charset.defaultCharset()));
-    super.start();
+  protected void append(E event) {
+    if (this.isStarted()) {
+      try {
+        if (event instanceof DeferredProcessingAware) {
+          ((DeferredProcessingAware) event).prepareForDeferredProcessing();
+        }
+
+        writer.write(event + CoreConstants.LINE_SEPARATOR);
+      } catch (IOException e) {
+        throw new IllegalStateException("IOException while writing to memory stream: " + e.getMessage(), e);
+      }
+    }
   }
 }
