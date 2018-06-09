@@ -39,12 +39,12 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.eclipse.jetty.servlet.ServletTester;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mortbay.jetty.testing.ServletTester;
 import org.slf4j.LoggerFactory;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
@@ -64,7 +64,7 @@ public class FZPWUploadConnectionTest {
     tester = new ServletTester();
     tester.setContextPath("/");
     tester.addServlet(TestServlet.class, URLPART);
-    baseTestUrl = tester.createSocketConnector(true) + URLPART;
+    baseTestUrl = tester.createConnector(true) + URLPART;
     tester.start();
   }
 
