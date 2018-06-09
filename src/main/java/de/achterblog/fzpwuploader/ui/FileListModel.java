@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractListModel;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * A ListModel for file-names that allows access to the corresponding File-object of an item.
  *
@@ -34,7 +36,7 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
   private static final long serialVersionUID = 1L;
 
   private final List<File> files;
-  public static final FileListModel EMPTY_MODEL;
+  static final FileListModel EMPTY_MODEL;
 
 
   static {
@@ -43,8 +45,7 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
   }
 
   /**
-   * 
-   * @param files
+   *
    * @throws NullPointerException if {@code files == null}
    * @throws IllegalStateException if {@code files} contains null
    */
@@ -74,17 +75,7 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
     return files.get(index).getName();
   }
 
-  /**
-   * Get the File for this position
-   *
-   * @param index The index in the list-view
-   * @return The File that corresponds to this item in the view
-   * @throws IndexOutOfBoundsException If {@code (index < 0 || index >= getSize())}
-   */
-  public File getFileAt(int index) throws IndexOutOfBoundsException {
-    return files.get(index);
-  }
-
+  @NonNull
   @Override
   public Iterator<File> iterator() {
     return files.iterator();

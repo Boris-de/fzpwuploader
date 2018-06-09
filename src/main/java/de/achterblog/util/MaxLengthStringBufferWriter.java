@@ -20,6 +20,8 @@ package de.achterblog.util;
 
 import java.io.Writer;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 /**
  * A simple StringWriter that tries to keep the size of the String below a given maximum.
  *
@@ -42,7 +44,7 @@ final class MaxLengthStringBufferWriter extends Writer {
   }
 
   @Override
-  public void write(char[] chars, int offset, int len) {
+  public void write(@NonNull char[] chars, int offset, int len) {
     synchronized (buffer) {
       buffer.append(chars, offset, len);
       final int size = buffer.length();

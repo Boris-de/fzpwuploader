@@ -60,7 +60,7 @@ public class MaxLengthStringBufferWriterTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalidMaxSize() throws IOException {
+  public void testInvalidMaxSize() {
     new MaxLengthStringBufferWriter(-1);
   }
 }

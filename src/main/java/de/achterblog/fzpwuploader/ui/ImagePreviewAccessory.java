@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author boris
  */
-public class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
+class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
   private static final int MAX_SIZE = 160;
   private static final Pattern imageFilename = Pattern.compile("\\.(png|jpe?g|gif)$", Pattern.CASE_INSENSITIVE);
   private static final Logger logger = LoggerFactory.getLogger(ImagePreviewAccessory.class);
@@ -47,7 +47,7 @@ public class ImagePreviewAccessory extends JPanel implements PropertyChangeListe
   /** A flag that show if the image changed from the last-rendering */
   private final AtomicBoolean paintNeedsClear = new AtomicBoolean(true);
 
-  public ImagePreviewAccessory() {
+  ImagePreviewAccessory() {
     Dimension max = new Dimension(MAX_SIZE, MAX_SIZE);
     setPreferredSize(max);
     setMaximumSize(max);

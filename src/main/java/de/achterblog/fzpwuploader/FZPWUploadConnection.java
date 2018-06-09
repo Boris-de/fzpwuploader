@@ -19,13 +19,10 @@
 package de.achterblog.fzpwuploader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.jcip.annotations.NotThreadSafe;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
@@ -40,6 +37,9 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+import net.jcip.annotations.NotThreadSafe;
 
 /**
  * Implementation of the upload for Freizeitparkweb.de
@@ -65,7 +65,7 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
   }
 
   @Override
-  public LoginStatus login(String user, String password) throws IOException, UploadException {
+  public LoginStatus login(@NonNull String user, @NonNull String password) throws IOException, UploadException {
     if (loginStatus == LoginStatus.LOGGED_IN) {
       throw new IllegalStateException("Cannot login twice");
     }
@@ -95,7 +95,7 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
   }
 
   @Override
-  public String upload(File file) throws FileNotFoundException, IOException, UploadException {
+  public String upload(@NonNull final File file) throws IOException, UploadException {
     String url = baseUrl + "?az=upload_file&forum=";
     PostMethod post = new PostMethod(url);
     post.addRequestHeader("Referer", url);
