@@ -38,12 +38,7 @@ public class Launcher {
 
     checkJavaVersion();
 
-    java.awt.EventQueue.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        new Uploader().setVisible(true);
-      }
-    });
+    java.awt.EventQueue.invokeLater(() -> new Uploader().setVisible(true));
   }
 
   private static void checkJavaVersion() throws HeadlessException {

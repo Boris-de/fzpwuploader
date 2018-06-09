@@ -20,8 +20,7 @@ package de.achterblog.fzpwuploader.ui;
 
 import de.achterblog.fzpwuploader.UploadBatch;
 import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
@@ -88,18 +87,10 @@ public class Uploader extends javax.swing.JFrame {
     progressBar.setStringPainted(true);
 
     buttonSelect.setText("Select...");
-    buttonSelect.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        buttonSelectActionPerformed(evt);
-      }
-    });
+    buttonSelect.addActionListener(this::buttonSelectActionPerformed);
 
     buttonUpload.setText("Upload");
-    buttonUpload.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        buttonUploadActionPerformed(evt);
-      }
-    });
+    buttonUpload.addActionListener(this::buttonUploadActionPerformed);
 
     urlOutputArea.setColumns(20);
     urlOutputArea.setEditable(false);
@@ -112,11 +103,7 @@ public class Uploader extends javax.swing.JFrame {
 
     menuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
     menuItemExit.setText("Exit");
-    menuItemExit.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        menuItemExitActionPerformed(evt);
-      }
-    });
+    menuItemExit.addActionListener(this::menuItemExitActionPerformed);
     menuFile.add(menuItemExit);
 
     menuBar.add(menuFile);
@@ -124,19 +111,11 @@ public class Uploader extends javax.swing.JFrame {
     menuQuestionMark.setText("?");
 
     menuItemLog.setText("Log");
-    menuItemLog.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        menuItemLogActionPerformed(evt);
-      }
-    });
+    menuItemLog.addActionListener(this::menuItemLogActionPerformed);
     menuQuestionMark.add(menuItemLog);
 
     menuItemAbout.setText("About");
-    menuItemAbout.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        menuItemAboutActionPerformed(evt);
-      }
-    });
+    menuItemAbout.addActionListener(this::menuItemAboutActionPerformed);
     menuQuestionMark.add(menuItemAbout);
 
     menuBar.add(menuQuestionMark);
@@ -240,12 +219,9 @@ public class Uploader extends javax.swing.JFrame {
       Uploader.this.setEnabled(false);
 
       SwingWorker<String, Integer> task = new BackgroundUpload(list);
-      task.addPropertyChangeListener(new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-          if ("progress".equals(evt.getPropertyName())) {
-            progressBar.setValue((Integer) evt.getNewValue());
-          }
+      task.addPropertyChangeListener(evt1 -> {
+        if ("progress".equals(evt1.getPropertyName())) {
+          progressBar.setValue((Integer) evt1.getNewValue());
         }
       });
       activityProgressBar.setVisible(true);
