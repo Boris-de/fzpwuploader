@@ -27,6 +27,9 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import org.junit.Test;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
+
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -125,12 +128,12 @@ public class StreamsTest {
     }
 
     @Override
-    public int read(byte[] b) throws IOException {
+    public int read(@NonNull byte[] b) throws IOException {
       throw new IOException();
     }
 
     @Override
-    public synchronized int read(byte[] b, int off, int len) throws IOException {
+    public synchronized int read(@NonNull byte[] b, int off, int len) throws IOException {
       throw new IOException();
     }
   }

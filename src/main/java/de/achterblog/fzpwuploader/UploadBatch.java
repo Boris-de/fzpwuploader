@@ -100,19 +100,19 @@ public class UploadBatch {
     return buffer.toString();
   }
 
-  public static interface UploadBatchCallback {
+  public interface UploadBatchCallback {
     /**
      * Called if a file was uploaded
      *
      * @param uploaded The file that was uploaded
      */
-    public void uploaded(File uploaded);
+    void uploaded(File uploaded);
 
     /**
      * Called if a file-upload failed
      *
      * @param uploaded The file that was <b>not</b> uploaded
      */
-    public void failed(File uploaded);
+    void failed(File uploaded);
   }
 }

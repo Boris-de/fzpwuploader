@@ -289,7 +289,7 @@ public class Uploader extends javax.swing.JFrame {
     private final FileListModel fileList;
     private final AtomicInteger uploadCount = new AtomicInteger(0);
 
-    public BackgroundUpload(FileListModel fileList) {
+    BackgroundUpload(FileListModel fileList) {
       this.fileList = fileList;
     }
 

@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public interface UploadConnection {
   /** The return value for {@link #login(java.lang.String, java.lang.String) login} */
-  public enum LoginStatus {
+  enum LoginStatus {
     /** The login was successful and the Connection can be used to upload. */
     LOGGED_IN,
     /** The user was once logged in, but is now logged out on his own request */
@@ -42,7 +42,7 @@ public interface UploadConnection {
     /** The login-status could not be recognised */
     UNKNOWN,
     /** The connection is disconnected (can be before or after a connection) */
-    DISCONNECTED;
+    DISCONNECTED,
   }
 
   /** Connect to the server with this username and password
@@ -54,7 +54,7 @@ public interface UploadConnection {
    * @throws IllegalStateException If the connection is already logged in
    */
   @CheckReturnValue(priority = Priority.LOW, explanation = "You should always check if the login was successful or unknown. And handle the unknown-status")
-  public LoginStatus login(@NonNull String user, @NonNull String password) throws UploadException, IOException, IllegalStateException;
+  LoginStatus login(@NonNull String user, @NonNull String password) throws UploadException, IOException, IllegalStateException;
 
   /**
    * Upload this file
@@ -66,7 +66,7 @@ public interface UploadConnection {
    * @throws java.lang.IllegalStateException If the user was not logged in
    * @throws java.io.IOException Can be forwarded if it occurs within the upload
    */
-  public String upload(@NonNull File file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
+  String upload(@NonNull File file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
 
   /**
    * Logout from the server.
@@ -76,14 +76,13 @@ public interface UploadConnection {
    *
    * @return {@code true} if successful, {@code false} if an error happened (aside from an
    *         Exception, e.g. the answer was not unknown to the implementation)
-   * @throws java.io.IOException Can be forwarded if the logout throws this
    */
   @CheckReturnValue(priority = Priority.LOW, explanation = "If the logout fails the user should be informed")
-  public boolean logout();
+  boolean logout();
 
   /** Completely disconnect from the server. May close connections, wipe login-data etc. */
-  public void disconnect();
+  void disconnect();
 
   /** Return the current LoginStatus of this connection */
-  public LoginStatus getLoginStatus();
+  LoginStatus getLoginStatus();
 }

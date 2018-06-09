@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author boris
  */
 @ThreadSafe
-public abstract class BaseHttpUploadConnection implements UploadConnection {
+abstract class BaseHttpUploadConnection implements UploadConnection {
   private final Logger logger = LoggerFactory.getLogger(BaseHttpUploadConnection.class);
   private final Charset charset;
 
@@ -43,7 +43,7 @@ public abstract class BaseHttpUploadConnection implements UploadConnection {
    * @param charset the charset to be used for this connection
    * @throws java.lang.NullPointerException If {@code charset == null}
    */
-  public BaseHttpUploadConnection(Charset charset) throws NullPointerException {
+  BaseHttpUploadConnection(Charset charset) throws NullPointerException {
     if (charset == null) {
       throw new NullPointerException("charset");
     }
@@ -61,7 +61,7 @@ public abstract class BaseHttpUploadConnection implements UploadConnection {
    * @throws NullPointerException If {@code method == null}
    * @throws UploadException If the return was not "200 OK"
    */
-  protected String readFromHttpMethod(HttpClient client, HttpMethod method) throws IOException, UploadException {
+  String readFromHttpMethod(HttpClient client, HttpMethod method) throws IOException, UploadException {
     try {
       int status = client.executeMethod(method);
       logger.debug("URL {} returned {}", method.getURI(), status);

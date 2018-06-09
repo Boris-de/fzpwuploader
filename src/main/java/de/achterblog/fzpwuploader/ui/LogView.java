@@ -26,9 +26,9 @@ import javax.swing.JDialog;
  *
  * @author boris
  */
-public class LogView extends JDialog {
+class LogView extends JDialog {
   /** Creates new form LogView */
-  public LogView(Frame parent, boolean modal) {
+  LogView(Frame parent, boolean modal) {
     super(parent, modal);
     initComponents();
   }
