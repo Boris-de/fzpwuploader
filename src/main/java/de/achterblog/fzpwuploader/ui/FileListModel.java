@@ -18,12 +18,14 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.AbstractListModel;
+import java.util.Objects;
+
+import javax.swing.*;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 
@@ -32,24 +34,18 @@ import edu.umd.cs.findbugs.annotations.NonNull;
  *
  * @author boris
  */
-class FileListModel extends AbstractListModel implements Iterable<File> {
+class FileListModel extends AbstractListModel implements Iterable<Path> {
   private static final long serialVersionUID = 1L;
 
-  private final List<File> files;
-  static final FileListModel EMPTY_MODEL;
-
-
-  static {
-    List<File> temp = Collections.emptyList();
-    EMPTY_MODEL = new FileListModel(temp);
-  }
+  private final List<Path> files;
+  static final FileListModel EMPTY_MODEL = new FileListModel(Collections.<Path>emptyList());
 
   /**
    *
    * @throws NullPointerException if {@code files == null}
    * @throws IllegalStateException if {@code files} contains null
    */
-  public FileListModel(List<File> files) {
+  public FileListModel(List<Path> files) {
     super();
     this.files = Collections.unmodifiableList(new ArrayList<>(files)); // defensive copy
 
@@ -72,12 +68,12 @@ class FileListModel extends AbstractListModel implements Iterable<File> {
    */
   @Override
   public String getElementAt(int index) throws IndexOutOfBoundsException {
-    return files.get(index).getName();
+    return Objects.toString(files.get(index).getFileName());
   }
 
   @NonNull
   @Override
-  public Iterator<File> iterator() {
+  public Iterator<Path> iterator() {
     return files.iterator();
   }
 }

@@ -22,11 +22,14 @@ import de.achterblog.fzpwuploader.UploadBatch;
 import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -181,7 +184,7 @@ public class Uploader extends javax.swing.JFrame {
   }// </editor-fold>//GEN-END:initComponents
 
   private void buttonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectActionPerformed
-    List<File> files;
+    List<Path> files;
     JFileChooser chooser = new JFileChooser();
     FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "jpeg");
     chooser.setFileFilter(filter);
@@ -191,7 +194,7 @@ public class Uploader extends javax.swing.JFrame {
     chooser.addPropertyChangeListener(preview);
     int returnVal = chooser.showOpenDialog(null);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
-      files = Arrays.asList(chooser.getSelectedFiles());
+      files = getSelectedPaths(chooser);
       logger.debug("Selected {} files", files.size());
     } else {
       logger.debug("No files selected");
@@ -200,7 +203,7 @@ public class Uploader extends javax.swing.JFrame {
     fileList.setModel(new FileListModel(files));
 }//GEN-LAST:event_buttonSelectActionPerformed
 
-    private void buttonUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUploadActionPerformed
+  private void buttonUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUploadActionPerformed
       if (textFieldUsername.getText().length() == 0 || textFieldPassword.getPassword().length == 0) {
         JOptionPane.showMessageDialog(this, "Please enter the login details", "Error", JOptionPane.ERROR_MESSAGE);
         return;
@@ -239,6 +242,12 @@ public class Uploader extends javax.swing.JFrame {
     private void menuItemLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogActionPerformed
       new LogView(this, true).setVisible(true);
 }//GEN-LAST:event_menuItemLogActionPerformed
+
+  private static List<Path> getSelectedPaths(JFileChooser chooser) {
+    return Arrays.stream(chooser.getSelectedFiles())
+      .map(File::toPath)
+      .collect(Collectors.toList());
+  }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JProgressBar activityProgressBar;
@@ -289,12 +298,12 @@ public class Uploader extends javax.swing.JFrame {
 
     private final class UploadBatchCallbackImpl implements UploadBatchCallback {
       @Override
-      public void uploaded(File uploaded) {
+      public void uploaded(Path uploaded) {
         setProgress(uploadCount.incrementAndGet());
       }
 
       @Override
-      public void failed(File cur) {
+      public void failed(Path cur) {
         // TODO: show an error somewhere
         setProgress(uploadCount.incrementAndGet());
       }

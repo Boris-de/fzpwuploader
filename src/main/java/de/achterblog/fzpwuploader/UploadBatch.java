@@ -18,17 +18,19 @@
  */
 package de.achterblog.fzpwuploader;
 
-import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 
 /**
  * Logs in, uploads multiple files in a single batch and logs out.
@@ -47,7 +49,7 @@ public class UploadBatch {
     this.callback = callback;
   }
 
-  public String upload(Iterable<File> fileList) {
+  public String upload(Iterable<Path> fileList) {
     final UploadConnection con = new FZPWUploadConnection();
     final StringBuilder buffer = new StringBuilder(512);
 
@@ -57,11 +59,11 @@ public class UploadBatch {
         return "Failed to login user " + this.username + ": " + loginStatus;
       }
       ExecutorService exe = Executors.newSingleThreadExecutor();
-      Map<File, Future<String>> futures = new HashMap<>();
-      for (final File cur : fileList) {
+      Map<Path, Future<String>> futures = new HashMap<>();
+      for (final Path cur : fileList) {
         Future<String> f = exe.submit(() -> {
           try {
-            logger.debug("Starting upload for file {}", cur.getName());
+            logger.debug("Starting upload for file {}", cur);
             String result = con.upload(cur);
             callback.uploaded(cur);
             return result;
@@ -72,11 +74,11 @@ public class UploadBatch {
         });
         futures.put(cur, f);
       }
-      for (Map.Entry<File, Future<String>> cur : futures.entrySet()) {
+      for (Map.Entry<Path, Future<String>> cur : futures.entrySet()) {
         try {
           String url = cur.getValue().get();
           buffer.append(url).append('\n');
-          buffer.append(cur.getKey().getName()).append("\n\n");
+          buffer.append(cur.getKey().getFileName()).append("\n\n");
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
         } catch (ExecutionException ex) {
@@ -102,13 +104,13 @@ public class UploadBatch {
      *
      * @param uploaded The file that was uploaded
      */
-    void uploaded(File uploaded);
+    void uploaded(Path uploaded);
 
     /**
      * Called if a file-upload failed
      *
      * @param uploaded The file that was <b>not</b> uploaded
      */
-    void failed(File uploaded);
+    void failed(Path uploaded);
   }
 }

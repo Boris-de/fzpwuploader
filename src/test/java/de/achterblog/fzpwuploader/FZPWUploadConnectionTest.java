@@ -18,10 +18,11 @@
  */
 package de.achterblog.fzpwuploader;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.jimfs.Jimfs;
+
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 import de.achterblog.util.Streams;
 
@@ -58,9 +61,12 @@ public class FZPWUploadConnectionTest {
   private static volatile String nextResponse;
   private static volatile Map<String, String> lastRequestParameters;
   private static volatile List<FileItem> lastFileItems;
+  private static FileSystem inMemoryfileSystem;
 
   @BeforeClass
   public static void setUpClass() throws Exception {
+    inMemoryfileSystem = Jimfs.newFileSystem();
+
     tester = new ServletTester();
     tester.setContextPath("/");
     tester.addServlet(TestServlet.class, URLPART);
@@ -120,53 +126,48 @@ public class FZPWUploadConnectionTest {
   public void testUpload() throws Exception {
     final byte[] fileContents = new byte[]{(byte) 255, (byte) 216, (byte) 97, (byte) 255, (byte) 217};
 
-    File tempFile = File.createTempFile("test", "tmp");
-    try (OutputStream out = new FileOutputStream(tempFile)) {
+    final Path testFile = inMemoryfileSystem.getPath("testUpload.test");
+    try (OutputStream out = Files.newOutputStream(testFile)) {
       out.write(fileContents);
     }
 
-    try {
-      nextResponse = "Seite wird geladen, einen Moment bitte...";
-      connection.login("", "");
-      nextResponse = "https://Freizeitparkweb.de/dcf/User_files/1234567890abcdef.jpg";
-      String uploadedUrl = connection.upload(tempFile);
-      assertEquals(uploadedUrl, nextResponse);
-      assertThat(lastFileItems.size(), is(4));
-      for (FileItem cur : lastFileItems) {
-        String fieldName = cur.getFieldName();
-        if (null != fieldName) switch (fieldName) {
-          case "az":
-            assertEquals("upload_file", cur.getString());
-            break;
-          case "command":
-            assertEquals("save", cur.getString());
-            break;
-          case "file_type":
-            assertEquals("jpg", cur.getString());
-            break;
-          case "file_upload":
-            assertArrayEquals(fileContents, Streams.toBytes(cur.getInputStream()));
-            break;
-          default:
-            fail("Uexpected item: " + fieldName);
-            break;
-        }
+    nextResponse = "Seite wird geladen, einen Moment bitte...";
+    connection.login("", "");
+    nextResponse = "https://Freizeitparkweb.de/dcf/User_files/1234567890abcdef.jpg";
+    String uploadedUrl = connection.upload(testFile);
+    assertEquals(uploadedUrl, nextResponse);
+    assertThat(lastFileItems.size(), is(4));
+    for (FileItem cur : lastFileItems) {
+      String fieldName = cur.getFieldName();
+      if (null != fieldName) switch (fieldName) {
+        case "az":
+          assertEquals("upload_file", cur.getString());
+          break;
+        case "command":
+          assertEquals("save", cur.getString());
+          break;
+        case "file_type":
+          assertEquals("jpg", cur.getString());
+          break;
+        case "file_upload":
+          assertArrayEquals(fileContents, Streams.toBytes(cur.getInputStream()));
+          break;
+        default:
+          fail("Uexpected item: " + fieldName);
+          break;
       }
-    } finally {
-      tempFile.delete();
     }
   }
 
   @Test(expected = UploadException.class)
   public void testUploadFindsNoURL() throws Exception {
-    File tempFile = File.createTempFile("test", "tmp");
-    try {
-      nextResponse = "Seite wird geladen, einen Moment bitte...";
-      connection.login("", "");
-      connection.upload(tempFile);
-    } finally {
-      tempFile.delete();
+    final Path testFile = inMemoryfileSystem.getPath("testUploadFindsNoURL.test");
+    try (OutputStream out = Files.newOutputStream(testFile)) {
+      out.flush();
     }
+    nextResponse = "Seite wird geladen, einen Moment bitte...";
+    connection.login("", "");
+    connection.upload(testFile);
   }
 
   public static final class TestServlet extends HttpServlet {

@@ -18,12 +18,13 @@
  */
 package de.achterblog.fzpwuploader;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import edu.umd.cs.findbugs.annotations.CheckReturnValue;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Priority;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Basic interface for classes that upload a file to a login-secured place
@@ -66,7 +67,7 @@ public interface UploadConnection {
    * @throws java.lang.IllegalStateException If the user was not logged in
    * @throws java.io.IOException Can be forwarded if it occurs within the upload
    */
-  String upload(@NonNull File file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
+  String upload(@NonNull Path file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
 
   /**
    * Logout from the server.
