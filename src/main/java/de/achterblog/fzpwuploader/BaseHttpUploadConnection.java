@@ -22,6 +22,9 @@ import de.achterblog.util.Streams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Objects;
+
+import edu.umd.cs.findbugs.annotations.NonNull;
 import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -43,11 +46,8 @@ abstract class BaseHttpUploadConnection implements UploadConnection {
    * @param charset the charset to be used for this connection
    * @throws java.lang.NullPointerException If {@code charset == null}
    */
-  BaseHttpUploadConnection(Charset charset) throws NullPointerException {
-    if (charset == null) {
-      throw new NullPointerException("charset");
-    }
-    this.charset = charset;
+  BaseHttpUploadConnection(@NonNull Charset charset) throws NullPointerException {
+    this.charset = Objects.requireNonNull(charset, "charset");
   }
 
   /**

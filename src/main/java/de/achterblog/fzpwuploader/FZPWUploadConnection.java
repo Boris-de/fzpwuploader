@@ -18,9 +18,9 @@
  */
 package de.achterblog.fzpwuploader;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,13 +31,13 @@ import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.FilePartSource;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.achterblog.util.PathPartSource;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import net.jcip.annotations.NotThreadSafe;
 
@@ -95,14 +95,14 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
   }
 
   @Override
-  public String upload(@NonNull final File file) throws IOException, UploadException {
+  public String upload(@NonNull final Path file) throws IOException, UploadException {
     String url = baseUrl + "?az=upload_file&forum=";
     PostMethod post = new PostMethod(url);
     post.addRequestHeader("Referer", url);
     Part[] parts = {
       new StringPart("az", "upload_file"),
       new StringPart("command", "save"),
-      new FilePart("file_upload", new FilePartSource(file), "image/jpeg", null),
+      new FilePart("file_upload", new PathPartSource(file), "image/jpeg", null),
       new StringPart("file_type", "jpg"),};
     post.setRequestEntity(new MultipartRequestEntity(parts, post.getParams()));
 
@@ -116,10 +116,10 @@ public class FZPWUploadConnection extends BaseHttpUploadConnection {
         throw new UploadException("Could not find URL in the response");
       }
       String uploadedUrl = m.group(0);
-      logger.info("Sucessfully uploaded file " + file.getName() + " to " + uploadedUrl);
+      logger.info("Sucessfully uploaded file " + file.getFileName() + " to " + uploadedUrl);
       return uploadedUrl;
     } catch (IOException e) {
-      throw new UploadException("Failed to upload file " + file.getName(), e);
+      throw new UploadException("Failed to upload file " + file.getFileName(), e);
     }
   }
 
