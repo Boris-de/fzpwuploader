@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,18 +59,15 @@ public class UploadBatch {
       ExecutorService exe = Executors.newSingleThreadExecutor();
       Map<File, Future<String>> futures = new HashMap<>();
       for (final File cur : fileList) {
-        Future<String> f = exe.submit(new Callable<String>() {
-          @Override
-          public String call() throws Exception {
-            try {
-              logger.debug("Starting upload for file {}", cur.getName());
-              String result = con.upload(cur);
-              callback.uploaded(cur);
-              return result;
-            } catch (UploadException | IOException | IllegalStateException e) {
-              callback.failed(cur);
-              throw new UploadException(e.getMessage(), e);
-            }
+        Future<String> f = exe.submit(() -> {
+          try {
+            logger.debug("Starting upload for file {}", cur.getName());
+            String result = con.upload(cur);
+            callback.uploaded(cur);
+            return result;
+          } catch (UploadException | IOException | IllegalStateException e) {
+            callback.failed(cur);
+            throw new UploadException(e.getMessage(), e);
           }
         });
         futures.put(cur, f);
