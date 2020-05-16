@@ -37,6 +37,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletTester;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,7 +49,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.jimfs.Jimfs;
 
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
-import de.achterblog.util.Streams;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -140,21 +140,11 @@ public class FZPWUploadConnectionTest {
     for (FileItem cur : lastFileItems) {
       String fieldName = cur.getFieldName();
       if (null != fieldName) switch (fieldName) {
-        case "az":
-          assertEquals("upload_file", cur.getString());
-          break;
-        case "command":
-          assertEquals("save", cur.getString());
-          break;
-        case "file_type":
-          assertEquals("jpg", cur.getString());
-          break;
-        case "file_upload":
-          assertArrayEquals(fileContents, Streams.toBytes(cur.getInputStream()));
-          break;
-        default:
-          fail("Uexpected item: " + fieldName);
-          break;
+        case "az" -> assertEquals("upload_file", cur.getString());
+        case "command" -> assertEquals("save", cur.getString());
+        case "file_type" -> assertEquals("jpg", cur.getString());
+        case "file_upload" -> assertArrayEquals(fileContents, IOUtils.toByteArray(cur.getInputStream()));
+        default -> fail("Unexpected item: " + fieldName);
       }
     }
   }
@@ -179,7 +169,6 @@ public class FZPWUploadConnectionTest {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
       if (req.getContentType() != null && req.getContentType().startsWith("multipart/form-data")) {
         try {
@@ -187,7 +176,7 @@ public class FZPWUploadConnectionTest {
           ServletFileUpload upload = new ServletFileUpload(factory);
           lastFileItems = upload.parseRequest(req);
         } catch (FileUploadException e) {
-          LoggerFactory.getLogger(FZPWUploadConnectionTest.class).warn("", e);
+          LoggerFactory.getLogger(TestServlet.class).warn(e.getMessage(), e);
         }
       } else {
         lastFileItems = Collections.emptyList();

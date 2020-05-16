@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author boris
  */
 public class Launcher {
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     setLookAndFeel();
 
     checkJavaVersion();

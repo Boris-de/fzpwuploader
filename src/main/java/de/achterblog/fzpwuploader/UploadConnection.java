@@ -22,15 +22,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import edu.umd.cs.findbugs.annotations.CheckReturnValue;
-import edu.umd.cs.findbugs.annotations.NonNull;
-import edu.umd.cs.findbugs.annotations.Priority;
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Basic interface for classes that upload a file to a login-secured place
  *
  * @author boris
  */
+@ParametersAreNonnullByDefault
 public interface UploadConnection {
   /** The return value for {@link #login(java.lang.String, java.lang.String) login} */
   enum LoginStatus {
@@ -54,8 +55,9 @@ public interface UploadConnection {
    * @throws java.io.IOException Can be forwarded if it occurs within the login-process
    * @throws IllegalStateException If the connection is already logged in
    */
-  @CheckReturnValue(priority = Priority.LOW, explanation = "You should always check if the login was successful or unknown. And handle the unknown-status")
-  LoginStatus login(@NonNull String user, @NonNull String password) throws UploadException, IOException, IllegalStateException;
+  @Nonnull
+  @CheckReturnValue
+  LoginStatus login(String user, String password) throws UploadException, IOException, IllegalStateException;
 
   /**
    * Upload this file
@@ -67,7 +69,8 @@ public interface UploadConnection {
    * @throws java.lang.IllegalStateException If the user was not logged in
    * @throws java.io.IOException Can be forwarded if it occurs within the upload
    */
-  String upload(@NonNull Path file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
+  @Nonnull
+  String upload(Path file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
 
   /**
    * Logout from the server.
@@ -78,12 +81,14 @@ public interface UploadConnection {
    * @return {@code true} if successful, {@code false} if an error happened (aside from an
    *         Exception, e.g. the answer was not unknown to the implementation)
    */
-  @CheckReturnValue(priority = Priority.LOW, explanation = "If the logout fails the user should be informed")
+  @CheckReturnValue
   boolean logout();
 
   /** Completely disconnect from the server. May close connections, wipe login-data etc. */
   void disconnect();
 
   /** Return the current LoginStatus of this connection */
+
+  @Nonnull
   LoginStatus getLoginStatus();
 }

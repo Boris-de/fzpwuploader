@@ -25,9 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
 
 /**
  * A ListModel for file-names that allows access to the corresponding File-object of an item.
@@ -71,7 +70,7 @@ class FileListModel extends AbstractListModel implements Iterable<Path> {
     return Objects.toString(files.get(index).getFileName());
   }
 
-  @NonNull
+  @Nonnull
   @Override
   public Iterator<Path> iterator() {
     return files.iterator();

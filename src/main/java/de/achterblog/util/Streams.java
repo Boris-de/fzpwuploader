@@ -34,30 +34,6 @@ import java.nio.charset.Charset;
  */
 public final class Streams {
   /**
-   * Read a stream into a Byte-Array
-   *
-   * @param in The stream that should be read
-   * @return The bytes of this stream
-   * @throws IOException Forwarded from the stream-read-operations
-   * @throws NullPointerException If {@code in == null}
-   */
-  public static byte[] toBytes(InputStream in) throws IOException {
-    if (in == null) {
-      throw new NullPointerException("in");
-    }
-
-    InputStream bufIn = new BufferedInputStream(in);
-    ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-
-    int bytesRead;
-    byte[] buffer = new byte[256];
-    while ((bytesRead = bufIn.read(buffer)) != -1) {
-      out.write(buffer, 0, bytesRead);
-    }
-    return out.toByteArray();
-  }
-
-  /**
    * Read a stream into a String
    *
    * @param in The stream that should be read
