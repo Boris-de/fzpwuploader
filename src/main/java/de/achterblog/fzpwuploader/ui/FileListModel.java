@@ -32,7 +32,7 @@ import javax.swing.*;
  *
  * @author boris
  */
-class FileListModel extends AbstractListModel implements Iterable<Path> {
+class FileListModel extends AbstractListModel<String> implements Iterable<Path> {
   private static final long serialVersionUID = 1L;
 
   private final List<Path> files;

@@ -58,7 +58,7 @@ public class Launcher {
   private static void setLookAndFeel() {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+    } catch (ReflectiveOperationException | UnsupportedLookAndFeelException e) {
       LoggerFactory.getLogger(Launcher.class).warn("Error setting native LaF", e);
     }
   }
