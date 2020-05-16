@@ -8,33 +8,33 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.concurrent.Flow;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.jimfs.Jimfs;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class MultiPartBodyPublisherTest {
-  private FileSystem inMemoryfileSystem;
+class MultiPartBodyPublisherTest {
+  private FileSystem inMemoryFileSystem;
 
-  @Before
-  public void setUp() {
-    inMemoryfileSystem = Jimfs.newFileSystem();
+  @BeforeEach
+  void setUp() {
+    inMemoryFileSystem = Jimfs.newFileSystem();
   }
 
-  @After
-  public void tearDown() throws IOException {
-    inMemoryfileSystem.close();
+  @AfterEach
+  void tearDown() throws IOException {
+    inMemoryFileSystem.close();
   }
 
   @Test
-  public void test() throws IOException {
-    final var path = inMemoryfileSystem.getPath("path");
+  void test() throws IOException {
+    final var path = inMemoryFileSystem.getPath("path");
     Files.writeString(path, "content");
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8, () -> "###boundary###")) {
       publisher.addPart("name", "test");
@@ -60,7 +60,7 @@ public class MultiPartBodyPublisherTest {
   }
 
   @Test
-  public void testMissingParts() throws IOException {
+  void testMissingParts() throws IOException {
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8)) {
       final var e = assertThrows(IllegalStateException.class, publisher::build);
       assertThat(e.getMessage(), is("No parts defined yet"));
@@ -68,8 +68,8 @@ public class MultiPartBodyPublisherTest {
   }
 
   @Test
-  public void testCannotReadFromFile() throws IOException {
-    final var path = inMemoryfileSystem.getPath("path");
+  void testCannotReadFromFile() throws IOException {
+    final var path = inMemoryFileSystem.getPath("path");
     Files.createDirectories(path);
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8)) {
       publisher.addPart("name", path, null, "image/jpeg");

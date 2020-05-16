@@ -41,11 +41,11 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletTester;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
@@ -53,10 +53,11 @@ import com.google.common.jimfs.Jimfs;
 
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class FZPWUploadConnectionTest {
+class FZPWUploadConnectionTest {
   private static final String URLPART = "/dc-test";
   private static String baseTestUrl;
   private static ServletTester tester;
@@ -67,8 +68,8 @@ public class FZPWUploadConnectionTest {
   private static volatile List<Cookie> lastCookies;
   private static FileSystem inMemoryfileSystem;
 
-  @BeforeClass
-  public static void setUpClass() throws Exception {
+  @BeforeAll
+  static void setUpClass() throws Exception {
     inMemoryfileSystem = Jimfs.newFileSystem();
 
     tester = new ServletTester();
@@ -78,35 +79,36 @@ public class FZPWUploadConnectionTest {
     tester.start();
   }
 
-  @AfterClass
-  public static void tearDownClass() throws Exception {
+  @AfterAll
+  static void tearDownClass() throws Exception {
     tester.stop();
   }
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     connection = new FZPWUploadConnection(baseTestUrl);
     nextResponse = "";
     lastRequestParameters = Collections.emptyMap();
   }
 
-  @After
-  public void tearDown() {
+  @AfterEach
+  void tearDown() {
     connection.disconnect();
   }
 
   @Test
-  public void testLoginLogout() throws Exception {
+  void testLoginLogout() throws Exception {
     String user = "Test";
     String password = "password123";
     nextResponse = "Seite wird geladen, einen Moment bitte...";
     LoginStatus result = connection.login(user, password);
     assertThat(result, is(LoginStatus.LOGGED_IN));
     assertThat(connection.getLoginStatus(), is(LoginStatus.LOGGED_IN));
-    assertEquals(user, lastRequestParameters.get("Username"));
-    assertEquals(password, lastRequestParameters.get("Password"));
+    assertThat(lastRequestParameters.get("Username"), is(user));
+    assertThat(lastRequestParameters.get("Password"), is(password));
     assertThat(lastCookies, emptyCollectionOf(Cookie.class));
 
+    //noinspection ResultOfMethodCallIgnored
     connection.logout();
     assertThat(connection.getLoginStatus(), is(LoginStatus.LOGGED_OUT));
     assertThat(lastCookies, hasSize(1));
@@ -116,6 +118,7 @@ public class FZPWUploadConnectionTest {
     nextResponse = "Login Problem: Falscher Username";
     assertThat(connection.login(user, password), is(LoginStatus.REFUSED));
 
+    //noinspection ResultOfMethodCallIgnored
     connection.logout();
     nextResponse = "xxx";
     assertThat(connection.login(user, password), is(LoginStatus.UNKNOWN));
@@ -124,15 +127,17 @@ public class FZPWUploadConnectionTest {
     assertThat(connection.getLoginStatus(), is(LoginStatus.DISCONNECTED));
   }
 
-  @Test(expected = IllegalStateException.class)
-  public void loginTwice() throws Exception {
+  @Test
+  @SuppressWarnings("ResultOfMethodCallIgnored")
+  void loginTwice() throws Exception {
     nextResponse = "Seite wird geladen, einen Moment bitte...";
     connection.login("", "");
-    connection.login("", "");
+    var e = assertThrows(IllegalStateException.class, () -> connection.login("", ""));
+    assertThat(e.getMessage(), is("Cannot login twice"));
   }
 
   @Test
-  public void testUpload() throws Exception {
+  void testUpload() throws Exception {
     final byte[] fileContents = new byte[]{(byte) 255, (byte) 216, (byte) 97, (byte) 255, (byte) 217};
 
     final Path testFile = inMemoryfileSystem.getPath("testUpload.test");
@@ -141,6 +146,7 @@ public class FZPWUploadConnectionTest {
     }
 
     nextResponse = "Seite wird geladen, einen Moment bitte...";
+    //noinspection ResultOfMethodCallIgnored
     connection.login("", "");
     nextResponse = "https://Freizeitparkweb.de/dcf/User_files/1234567890abcdef.jpg";
     String uploadedUrl = connection.upload(testFile);
@@ -158,15 +164,17 @@ public class FZPWUploadConnectionTest {
     }
   }
 
-  @Test(expected = UploadException.class)
-  public void testUploadFindsNoURL() throws Exception {
+  @Test
+  void testUploadFindsNoURL() throws Exception {
     final Path testFile = inMemoryfileSystem.getPath("testUploadFindsNoURL.test");
     try (OutputStream out = Files.newOutputStream(testFile)) {
       out.flush();
     }
     nextResponse = "Seite wird geladen, einen Moment bitte...";
+    //noinspection ResultOfMethodCallIgnored
     connection.login("", "");
-    connection.upload(testFile);
+    final var e = assertThrows(UploadException.class, () -> connection.upload(testFile));
+    assertThat(e.getMessage(), is("Could not find URL in the response"));
   }
 
   public static final class TestServlet extends HttpServlet {
