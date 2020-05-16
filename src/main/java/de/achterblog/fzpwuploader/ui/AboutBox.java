@@ -18,8 +18,13 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
-import de.achterblog.util.Streams;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+
 import javax.swing.JDialog;
 
 /**
@@ -188,7 +193,7 @@ public class AboutBox extends JDialog {
 
   private String getLicenseText() {
     try {
-      return Streams.toString(AboutBox.class.getResourceAsStream("/COPYING"), "US-ASCII");
+      return getResource("/COPYING");
     } catch (IOException e) {
       return "Could not read License. Visit https://www.gnu.org/licenses/old-licenses/gpl-2.0.html";
     }
@@ -197,16 +202,21 @@ public class AboutBox extends JDialog {
   private String getBundledLicensesText() {
     try {
       final String LINE = "\n---------------------------------------\n";
-      Class<?> clazz = AboutBox.class;
-      StringBuilder b = new StringBuilder();
-      b.append(Streams.toString(clazz.getResourceAsStream("/bundled-licenses.txt"), "US-ASCII"));
-      b.append(LINE).append("Full text of the Apache 2.0 license follows\n").append(LINE);
-      b.append(Streams.toString(clazz.getResourceAsStream("/apache-2.0.txt"), "US-ASCII"));
-      b.append(LINE).append("Full text of the LGPL 2.1 follows\n").append(LINE);
-      b.append(Streams.toString(clazz.getResourceAsStream("/lgpl-2.1.txt"), "US-ASCII"));
-      return b.toString();
+      return getResource("/bundled-licenses.txt") +
+        LINE + "Full text of the Apache 2.0 license follows\n" + LINE +
+        getResource("/apache-2.0.txt") +
+        LINE + "Full text of the LGPL 2.1 follows\n" + LINE +
+        getResource("/lgpl-2.1.txt");
     } catch (IOException e) {
       return "Could not read bundled licenses. Perhaps this package does not contain any?";
+    }
+  }
+
+  private String getResource(String s) throws IOException {
+    try (InputStream in = AboutBox.class.getResourceAsStream(s);
+         BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+      return r.lines()
+        .collect(Collectors.joining("\n"));
     }
   }
 
