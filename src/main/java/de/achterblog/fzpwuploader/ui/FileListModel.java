@@ -19,7 +19,6 @@
 package de.achterblog.fzpwuploader.ui;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -37,7 +36,7 @@ class FileListModel extends AbstractListModel implements Iterable<Path> {
   private static final long serialVersionUID = 1L;
 
   private final List<Path> files;
-  static final FileListModel EMPTY_MODEL = new FileListModel(Collections.<Path>emptyList());
+  static final FileListModel EMPTY_MODEL = new FileListModel(Collections.emptyList());
 
   /**
    *
@@ -46,11 +45,10 @@ class FileListModel extends AbstractListModel implements Iterable<Path> {
    */
   public FileListModel(List<Path> files) {
     super();
-    this.files = Collections.unmodifiableList(new ArrayList<>(files)); // defensive copy
-
-    if (this.files.contains(null)) {
+    if (files.contains(null)) {
       throw new IllegalStateException("files contains null");
     }
+    this.files = List.copyOf(files); // defensive copy
   }
 
   @Override
