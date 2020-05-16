@@ -195,7 +195,7 @@ public class AboutBox extends JDialog {
     try {
       return getResource("/COPYING");
     } catch (IOException e) {
-      return "Could not read License. Visit https://www.gnu.org/licenses/old-licenses/gpl-2.0.html";
+      return "Could not read License. Visit https://www.gnu.org/licenses/gpl-3.0.html";
     }
   }
 
