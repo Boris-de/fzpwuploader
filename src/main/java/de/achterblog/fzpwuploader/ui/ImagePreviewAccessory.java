@@ -68,7 +68,7 @@ class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
         try {
           image = ImageIO.read(file);
         } catch (IOException e) {
-          logger.info("IOException reading " + file, e);
+          logger.info("IOException reading {}", file, e);
         }
 
         previewImage = scale(image);

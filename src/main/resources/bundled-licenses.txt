@@ -1,6 +1,6 @@
 SLF4J License
 
- Copyright (c) 2004-2013 QOS.ch
+ Copyright (c) 2004-2017 QOS.ch
  All rights reserved.
 
  Permission is hereby granted, free  of charge, to any person obtaining
@@ -27,8 +27,7 @@ SLF4J License
 Logback License
 
  Logback: the reliable, generic, fast and flexible logging framework.
-
- Copyright (C) 1999-2013, QOS.ch. All rights reserved.
+ Copyright (C) 1999-2017, QOS.ch. All rights reserved.
 
  This program and the accompanying materials are dual-licensed under
  either the terms of the Eclipse Public License v1.0 as published by

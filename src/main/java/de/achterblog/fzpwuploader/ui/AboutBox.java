@@ -203,8 +203,6 @@ public class AboutBox extends JDialog {
     try {
       final String LINE = "\n---------------------------------------\n";
       return getResource("/bundled-licenses.txt") +
-        LINE + "Full text of the Apache 2.0 license follows\n" + LINE +
-        getResource("/apache-2.0.txt") +
         LINE + "Full text of the LGPL 2.1 follows\n" + LINE +
         getResource("/lgpl-2.1.txt");
     } catch (IOException e) {
