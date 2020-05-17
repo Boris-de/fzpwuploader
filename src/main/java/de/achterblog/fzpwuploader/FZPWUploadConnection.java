@@ -45,11 +45,11 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.achterblog.util.MultiPartBodyPublisher;
 import de.achterblog.util.RuntimeIOException;
+import de.achterblog.util.log.Level;
+import de.achterblog.util.log.Logger;
+
 /**
  * Implementation of the upload for Freizeitparkweb.de
  *
@@ -58,8 +58,6 @@ import de.achterblog.util.RuntimeIOException;
 //@NotThreadSafe
 @ParametersAreNonnullByDefault
 public class FZPWUploadConnection implements UploadConnection {
-  private final Logger logger = LoggerFactory.getLogger(FZPWUploadConnection.class);
-
   private static final Charset FZPW_CHARSET = StandardCharsets.ISO_8859_1;
   public static final Pattern UPLOAD_FILE_NAME_PATTERN = Pattern.compile("https?://Freizeitparkweb.de/dcf/User_files/[\\da-f]+.jpg", Pattern.CASE_INSENSITIVE);
 
@@ -104,7 +102,7 @@ public class FZPWUploadConnection implements UploadConnection {
     if (body.contains("Login Problem: Falscher Username")) {
       loginStatus = LoginStatus.REFUSED;
     }
-    logger.debug("LoginStatus for user {}: {}", user, loginStatus);
+    Logger.log(Level.DEBUG, () ->"LoginStatus for user " + user + ": " + loginStatus);
     return loginStatus;
   }
 
@@ -125,11 +123,11 @@ public class FZPWUploadConnection implements UploadConnection {
 
       final Matcher matcher = UPLOAD_FILE_NAME_PATTERN.matcher(response.body());
       if (!matcher.find()) {
-        logger.info("The server's response was {}:\n{}", response.statusCode(), response.body());
+        Logger.log(Level.INFO, () -> "The server's response was " + response.statusCode() + ":\n" + response.body());
         throw new UploadException("Could not find URL in the response");
       }
       final String uploadedUrl = matcher.group(0);
-      logger.info("Successfully uploaded file {} to {}", file.getFileName(), uploadedUrl);
+      Logger.log(Level.INFO, () -> "Successfully uploaded file " + file.getFileName() + " to " + uploadedUrl);
       return uploadedUrl;
     }
   }
@@ -141,7 +139,7 @@ public class FZPWUploadConnection implements UploadConnection {
       final HttpResponse<String> response = sendRequest(HttpRequest.newBuilder(get));
       return response.body().contains("Der User wurde auf diesem Rechner ausgeloggt...");
     } catch (UploadException | IOException e) {
-      logger.info("Exception while logging out", e);
+      Logger.log(Level.WARN, "Exception while logging out", e);
       return false;
     } finally {
       client = null;
@@ -168,7 +166,7 @@ public class FZPWUploadConnection implements UploadConnection {
         .build();
       final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(FZPW_CHARSET));
       final int status = response.statusCode();
-      logger.debug("URL {} returned {}", request.uri(), status);
+      Logger.log(Level.DEBUG, () -> "URL " + request.uri() + " returned " + status);
       if (status != HttpURLConnection.HTTP_OK) {
         throw new UploadException("Unexpected http-return code: " + status);
       }

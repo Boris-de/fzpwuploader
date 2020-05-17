@@ -18,9 +18,11 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
-import de.achterblog.util.StringBufferAppender;
-import java.awt.Frame;
-import javax.swing.JDialog;
+import java.awt.*;
+
+import javax.swing.*;
+
+import de.achterblog.util.log.Logger;
 
 /**
  *
@@ -50,7 +52,7 @@ class LogView extends JDialog {
     jTextArea1.setColumns(20);
     jTextArea1.setEditable(false);
     jTextArea1.setRows(5);
-    jTextArea1.setText(StringBufferAppender.getBuffer());
+    jTextArea1.setText(Logger.getBuffer());
     jScrollPane1.setViewportView(jTextArea1);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

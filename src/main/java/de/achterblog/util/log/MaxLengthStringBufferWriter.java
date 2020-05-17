@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with FZPWUploader.  If not, see <https://www.gnu.org/licenses/>.
  */
-package de.achterblog.util;
+package de.achterblog.util.log;
 
 import java.io.Writer;
 
@@ -45,6 +45,13 @@ final class MaxLengthStringBufferWriter extends Writer {
   }
 
   @Override
+  public MaxLengthStringBufferWriter append(CharSequence csq) {
+    final var chars = csq.toString().toCharArray();
+    write(chars, 0, chars.length);
+    return this;
+  }
+
+  @Override
   public void write(char[] chars, int offset, int len) {
     synchronized (buffer) {
       buffer.append(chars, offset, len);
@@ -69,6 +76,10 @@ final class MaxLengthStringBufferWriter extends Writer {
 
   @Override
   public void close() {
+    buffer.setLength(0);
+  }
+
+  void reset() {
     buffer.setLength(0);
   }
 }

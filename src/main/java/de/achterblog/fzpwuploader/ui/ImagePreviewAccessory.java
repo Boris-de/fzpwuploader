@@ -18,20 +18,19 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.swing.*;
+
+import de.achterblog.util.log.Level;
+import de.achterblog.util.log.Logger;
 
 /**
  * A JPanel that paints previews of images that are submitted via this classes
@@ -42,7 +41,6 @@ import org.slf4j.LoggerFactory;
 class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
   private static final int MAX_SIZE = 160;
   private static final Pattern imageFilename = Pattern.compile("\\.(png|jpe?g|gif)$", Pattern.CASE_INSENSITIVE);
-  private static final Logger logger = LoggerFactory.getLogger(ImagePreviewAccessory.class);
   private transient volatile Image previewImage;
   /** A flag that show if the image changed from the last-rendering */
   private final AtomicBoolean paintNeedsClear = new AtomicBoolean(true);
@@ -59,7 +57,7 @@ class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
       File file = (File) event.getNewValue();
 
       if (file == null) {
-        logger.info("Multiple properties changed, cannot determine the file to preview");
+        Logger.log(Level.INFO, "Multiple properties changed, cannot determine the file to preview");
         return;
       }
 
@@ -68,7 +66,7 @@ class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
         try {
           image = ImageIO.read(file);
         } catch (IOException e) {
-          logger.info("IOException reading {}", file, e);
+          Logger.log(Level.INFO, () -> "IOException reading " + file);
         }
 
         previewImage = scale(image);

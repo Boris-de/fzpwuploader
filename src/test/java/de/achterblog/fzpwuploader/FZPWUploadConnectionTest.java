@@ -46,12 +46,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Jimfs;
 
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
+import de.achterblog.util.log.Level;
+import de.achterblog.util.log.Logger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -194,7 +195,8 @@ class FZPWUploadConnectionTest {
           ServletFileUpload upload = new ServletFileUpload(factory);
           lastFileItems = upload.parseRequest(req);
         } catch (FileUploadException e) {
-          LoggerFactory.getLogger(TestServlet.class).warn(e.getMessage(), e);
+          Logger.log(Level.ERROR, "FileUploadException", e);
+          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "FileUploadException");
         }
       } else {
         lastFileItems = Collections.emptyList();

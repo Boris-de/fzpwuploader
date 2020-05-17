@@ -16,9 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with FZPWUploader.  If not, see <https://www.gnu.org/licenses/>.
  */
-package de.achterblog.util;
-
-import java.io.IOException;
+package de.achterblog.util.log;
 
 import org.junit.jupiter.api.Test;
 
@@ -28,14 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MaxLengthStringBufferWriterTest {
   @Test
-  void testZeroLength() throws IOException {
+  void testZeroLength() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(0);
     w.append("x");
     assertThat(w.toString(), is(""));
   }
 
   @Test
-  void testSingleCharacter() throws IOException {
+  void testSingleCharacter() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(1);
     w.append("x");
     assertThat(w.toString(), is("x"));
@@ -44,7 +42,7 @@ class MaxLengthStringBufferWriterTest {
   }
 
   @Test
-  void testCutOffIsLineBased() throws IOException {
+  void testCutOffIsLineBased() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(10);
     w.append("12345\n6789");
     assertThat(w.toString(), is("12345\n6789"));
@@ -53,7 +51,7 @@ class MaxLengthStringBufferWriterTest {
   }
 
   @Test
-  void testClose() throws IOException {
+  void testClose() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(10);
     w.append("1234");
     assertThat(w.toString(), is("1234"));

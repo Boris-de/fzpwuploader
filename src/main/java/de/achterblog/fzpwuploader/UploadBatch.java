@@ -27,10 +27,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
+import de.achterblog.util.log.Level;
+import de.achterblog.util.log.Logger;
 
 /**
  * Logs in, uploads multiple files in a single batch and logs out.
@@ -38,7 +37,6 @@ import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
  * @author boris
  */
 public class UploadBatch {
-  private final static Logger logger = LoggerFactory.getLogger(UploadBatch.class);
   private final String username;
   private final String password;
   private final UploadBatchCallback callback;
@@ -63,7 +61,7 @@ public class UploadBatch {
       for (final Path cur : fileList) {
         Future<String> f = exe.submit(() -> {
           try {
-            logger.debug("Starting upload for file {}", cur);
+            Logger.log(Level.DEBUG, "Starting upload for file " + cur);
             String result = con.upload(cur);
             callback.uploaded(cur);
             return result;
@@ -82,16 +80,16 @@ public class UploadBatch {
         } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
         } catch (ExecutionException ex) {
-          logger.error("Exception while executing upload: ", ex);
+          Logger.log(Level.ERROR, "Exception while executing upload: ", ex);
         }
       }
     } catch (UploadException e) {
-      logger.error("UploadException in GUI", e);
+      Logger.log(Level.ERROR, "UploadException in GUI", e);
     } catch (IOException e) {
-      logger.error("IOException in GUI", e);
+      Logger.log(Level.ERROR, "IOException in GUI", e);
     } finally {
       if (!con.logout()) {
-        logger.error("The logout failed, the user may still be logged in");
+        Logger.log(Level.ERROR, "The logout failed, the user may still be logged in");
       }
       con.disconnect();
     }
