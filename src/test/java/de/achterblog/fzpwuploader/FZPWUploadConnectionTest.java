@@ -27,7 +27,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,11 +48,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Jimfs;
 
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class FZPWUploadConnectionTest {
@@ -61,6 +64,7 @@ public class FZPWUploadConnectionTest {
   private static volatile String nextResponse;
   private static volatile Map<String, String> lastRequestParameters;
   private static volatile List<FileItem> lastFileItems;
+  private static volatile List<Cookie> lastCookies;
   private static FileSystem inMemoryfileSystem;
 
   @BeforeClass
@@ -101,9 +105,14 @@ public class FZPWUploadConnectionTest {
     assertThat(connection.getLoginStatus(), is(LoginStatus.LOGGED_IN));
     assertEquals(user, lastRequestParameters.get("Username"));
     assertEquals(password, lastRequestParameters.get("Password"));
+    assertThat(lastCookies, emptyCollectionOf(Cookie.class));
 
     connection.logout();
     assertThat(connection.getLoginStatus(), is(LoginStatus.LOGGED_OUT));
+    assertThat(lastCookies, hasSize(1));
+    assertThat(lastCookies.get(0).getName(), is("DCForumSessionID"));
+    assertThat(lastCookies.get(0).getValue(), is("%%abcdefgh"));
+
     nextResponse = "Login Problem: Falscher Username";
     assertThat(connection.login(user, password), is(LoginStatus.REFUSED));
 
@@ -170,6 +179,7 @@ public class FZPWUploadConnectionTest {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+      lastCookies = Optional.ofNullable(req.getCookies()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
       if (req.getContentType() != null && req.getContentType().startsWith("multipart/form-data")) {
         try {
           FileItemFactory factory = new DiskFileItemFactory();
@@ -180,6 +190,10 @@ public class FZPWUploadConnectionTest {
         }
       } else {
         lastFileItems = Collections.emptyList();
+      }
+      if (req.getParameter("Username") != null) {
+        resp.addHeader("Set-Cookie", "DCForumSessionID=; expires=Thur, 31-Dec-98 12:00:00 GMT; path=/;");
+        resp.addHeader("Set-Cookie", "DCForumSessionID=%%abcdefgh; expires=Mon, 31-Dec-2025 12:00:00 GMT; path=/;");
       }
 
       lastRequestParameters = new HashMap<>();
