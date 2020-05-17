@@ -21,6 +21,9 @@ package de.achterblog.fzpwuploader;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -31,7 +34,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -78,7 +84,7 @@ public class FZPWUploadConnection implements UploadConnection {
     }
 
     client = HttpClient.newBuilder()
-      .cookieHandler(new CookieManager())
+      .cookieHandler(new CookieManager(new SingleOriginCookieStore(), CookiePolicy.ACCEPT_ORIGINAL_SERVER))
       .build();
     final Map<String, String> loginParameters = Map.of("cmd", "login",
                                                        "az", "login",
@@ -119,7 +125,7 @@ public class FZPWUploadConnection implements UploadConnection {
 
       final Matcher matcher = UPLOAD_FILE_NAME_PATTERN.matcher(response.body());
       if (!matcher.find()) {
-        logger.info("The servers-response was:\n{}", response);
+        logger.info("The server's response was {}:\n{}", response.statusCode(), response.body());
         throw new UploadException("Could not find URL in the response");
       }
       final String uploadedUrl = matcher.group(0);
@@ -184,4 +190,41 @@ public class FZPWUploadConnection implements UploadConnection {
       .collect(Collectors.joining("&"));
     return HttpRequest.BodyPublishers.ofString(bodyString);
   }
+
+
+  private static final class SingleOriginCookieStore implements CookieStore {
+    private final ConcurrentMap<String, HttpCookie> cookies = new ConcurrentHashMap<>();
+
+    @Override
+    public void add(URI uri, HttpCookie cookie) {
+      cookies.put(cookie.getName(), cookie);
+    }
+
+    @Override
+    public List<HttpCookie> get(URI uri) {
+      return getCookies();
+    }
+
+    @Override
+    public List<HttpCookie> getCookies() {
+      return List.copyOf(cookies.values());
+    }
+
+    @Override
+    public List<URI> getURIs() {
+      return null;
+    }
+
+    @Override
+    public boolean remove(URI uri, HttpCookie cookie) {
+      return cookies.remove(cookie.getName()) != null;
+    }
+
+    @Override
+    public boolean removeAll() {
+      cookies.clear();
+      return true;
+    }
+  }
+
 }
