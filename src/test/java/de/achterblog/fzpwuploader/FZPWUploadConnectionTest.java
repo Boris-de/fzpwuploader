@@ -59,6 +59,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
 public class FZPWUploadConnectionTest {
   private static final String URLPART = "/dc-test";
   private static String baseTestUrl;

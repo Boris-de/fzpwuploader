@@ -201,7 +201,7 @@ public class Uploader extends javax.swing.JFrame {
 }//GEN-LAST:event_buttonSelectActionPerformed
 
   private void buttonUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUploadActionPerformed
-      if (textFieldUsername.getText().length() == 0 || textFieldPassword.getPassword().length == 0) {
+      if (textFieldUsername.getText().isEmpty() || textFieldPassword.getPassword().length == 0) {
         JOptionPane.showMessageDialog(this, "Please enter the login details", "Error", JOptionPane.ERROR_MESSAGE);
         return;
       }
