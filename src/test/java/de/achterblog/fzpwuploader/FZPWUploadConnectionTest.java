@@ -58,7 +58,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FZPWUploadConnectionTest {
+public class FZPWUploadConnectionTest {
   private static final String URLPART = "/dc-test";
   private static String baseTestUrl;
   private static ServletTester tester;
@@ -70,7 +70,7 @@ class FZPWUploadConnectionTest {
   private static FileSystem inMemoryfileSystem;
 
   @BeforeAll
-  static void setUpClass() throws Exception {
+  public static void setUpClass() throws Exception {
     inMemoryfileSystem = Jimfs.newFileSystem();
 
     tester = new ServletTester();
@@ -81,24 +81,24 @@ class FZPWUploadConnectionTest {
   }
 
   @AfterAll
-  static void tearDownClass() throws Exception {
+  public static void tearDownClass() throws Exception {
     tester.stop();
   }
 
   @BeforeEach
-  void setUp() {
+  public void setUp() {
     connection = new FZPWUploadConnection(baseTestUrl);
     nextResponse = "";
     lastRequestParameters = Collections.emptyMap();
   }
 
   @AfterEach
-  void tearDown() {
+  public void tearDown() {
     connection.disconnect();
   }
 
   @Test
-  void testLoginLogout() throws Exception {
+  public void testLoginLogout() throws Exception {
     String user = "Test";
     String password = "password123";
     nextResponse = "Seite wird geladen, einen Moment bitte...";
@@ -109,7 +109,6 @@ class FZPWUploadConnectionTest {
     assertThat(lastRequestParameters.get("Password"), is(password));
     assertThat(lastCookies, emptyCollectionOf(Cookie.class));
 
-    //noinspection ResultOfMethodCallIgnored
     connection.logout();
     assertThat(connection.getLoginStatus(), is(LoginStatus.LOGGED_OUT));
     assertThat(lastCookies, hasSize(1));
@@ -119,7 +118,6 @@ class FZPWUploadConnectionTest {
     nextResponse = "Login Problem: Falscher Username";
     assertThat(connection.login(user, password), is(LoginStatus.REFUSED));
 
-    //noinspection ResultOfMethodCallIgnored
     connection.logout();
     nextResponse = "xxx";
     assertThat(connection.login(user, password), is(LoginStatus.UNKNOWN));
@@ -129,8 +127,7 @@ class FZPWUploadConnectionTest {
   }
 
   @Test
-  @SuppressWarnings("ResultOfMethodCallIgnored")
-  void loginTwice() throws Exception {
+  public void loginTwice() throws Exception {
     nextResponse = "Seite wird geladen, einen Moment bitte...";
     connection.login("", "");
     var e = assertThrows(IllegalStateException.class, () -> connection.login("", ""));
@@ -138,7 +135,7 @@ class FZPWUploadConnectionTest {
   }
 
   @Test
-  void testUpload() throws Exception {
+  public void testUpload() throws Exception {
     final byte[] fileContents = new byte[]{(byte) 255, (byte) 216, (byte) 97, (byte) 255, (byte) 217};
 
     final Path testFile = inMemoryfileSystem.getPath("testUpload.test");
@@ -147,7 +144,6 @@ class FZPWUploadConnectionTest {
     }
 
     nextResponse = "Seite wird geladen, einen Moment bitte...";
-    //noinspection ResultOfMethodCallIgnored
     connection.login("", "");
     nextResponse = "https://Freizeitparkweb.de/dcf/User_files/1234567890abcdef.jpg";
     String uploadedUrl = connection.upload(testFile);
@@ -166,13 +162,12 @@ class FZPWUploadConnectionTest {
   }
 
   @Test
-  void testUploadFindsNoURL() throws Exception {
+  public void testUploadFindsNoURL() throws Exception {
     final Path testFile = inMemoryfileSystem.getPath("testUploadFindsNoURL.test");
     try (OutputStream out = Files.newOutputStream(testFile)) {
       out.flush();
     }
     nextResponse = "Seite wird geladen, einen Moment bitte...";
-    //noinspection ResultOfMethodCallIgnored
     connection.login("", "");
     final var e = assertThrows(UploadException.class, () -> connection.upload(testFile));
     assertThat(e.getMessage(), is("Could not find URL in the response"));

@@ -36,11 +36,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
 public class MultiPartBodyPublisher implements Closeable {
   private static final String CRLF = "\r\n";
 
@@ -77,7 +72,7 @@ public class MultiPartBodyPublisher implements Closeable {
     return addPart(new StringPart(name, value));
   }
 
-  public MultiPartBodyPublisher addPart(String name, Path path, @Nullable String filename, @Nullable String contentType) {
+  public MultiPartBodyPublisher addPart(String name, Path path, String filename, String contentType) {
     validState(Files.exists(path), "File does not exist");
     return this.addPart(new FilePart(name, path, filename, contentType))
                .addPart(new FileContentPart(path))
@@ -107,7 +102,6 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  @ParametersAreNonnullByDefault
   private abstract class Part {
     abstract InputStream asStream() throws IOException;
 
@@ -116,7 +110,6 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  @ParametersAreNonnullByDefault
   private final class StringPart extends Part {
     private final String name;
     private final String value;
@@ -137,14 +130,13 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  @ParametersAreNonnullByDefault
   private final class FilePart extends Part {
     private final String name;
     private final Path path;
     private final String filename;
     private final String contentType;
 
-    public FilePart(String name, Path path, @Nullable String filename, @Nullable String contentType) {
+    public FilePart(String name, Path path, String filename, String contentType) {
       this.name = name;
       this.path = path;
       this.filename = filename;
@@ -163,7 +155,6 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  @ParametersAreNonnullByDefault
   private final class FileContentPart extends Part {
     private final Path path;
 
@@ -177,7 +168,6 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  @ParametersAreNonnullByDefault
   private final class FinalBoundaryPart extends Part {
     @Override
     InputStream asStream() {
@@ -192,7 +182,6 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  @ParametersAreNonnullByDefault
   private class PartsAsBytesIterator implements Iterator<byte[]>, Closeable {
     private final Iterator<Part> partIterator = partsList.iterator();
     private final byte[] buffer = new byte[4096];
@@ -214,7 +203,6 @@ public class MultiPartBodyPublisher implements Closeable {
       return partIterator.hasNext();
     }
 
-    @Nonnull
     @Override
     public byte[] next() {
       try {

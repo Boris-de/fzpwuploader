@@ -24,16 +24,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MaxLengthStringBufferWriterTest {
+public class MaxLengthStringBufferWriterTest {
   @Test
-  void testZeroLength() {
+  public void testZeroLength() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(0);
     w.append("x");
     assertThat(w.toString(), is(""));
   }
 
   @Test
-  void testSingleCharacter() {
+  public void testSingleCharacter() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(1);
     w.append("x");
     assertThat(w.toString(), is("x"));
@@ -42,7 +42,7 @@ class MaxLengthStringBufferWriterTest {
   }
 
   @Test
-  void testCutOffIsLineBased() {
+  public void testCutOffIsLineBased() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(10);
     w.append("12345\n6789");
     assertThat(w.toString(), is("12345\n6789"));
@@ -51,7 +51,7 @@ class MaxLengthStringBufferWriterTest {
   }
 
   @Test
-  void testClose() {
+  public void testClose() {
     MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(10);
     w.append("1234");
     assertThat(w.toString(), is("1234"));
@@ -60,7 +60,7 @@ class MaxLengthStringBufferWriterTest {
   }
 
   @Test
-  void testInvalidMaxSize() {
+  public void testInvalidMaxSize() {
     var e = assertThrows(IllegalArgumentException.class, () -> new MaxLengthStringBufferWriter(-1));
     assertThat(e.getMessage(), is("maxSize must not be negative"));
   }

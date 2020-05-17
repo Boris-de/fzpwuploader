@@ -42,9 +42,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 import de.achterblog.util.MultiPartBodyPublisher;
 import de.achterblog.util.RuntimeIOException;
 import de.achterblog.util.log.Level;
@@ -56,7 +53,6 @@ import de.achterblog.util.log.Logger;
  * @author boris
  */
 //@NotThreadSafe
-@ParametersAreNonnullByDefault
 public class FZPWUploadConnection implements UploadConnection {
   private static final Charset FZPW_CHARSET = StandardCharsets.ISO_8859_1;
   public static final Pattern UPLOAD_FILE_NAME_PATTERN = Pattern.compile("https?://Freizeitparkweb.de/dcf/User_files/[\\da-f]+.jpg", Pattern.CASE_INSENSITIVE);
@@ -74,7 +70,6 @@ public class FZPWUploadConnection implements UploadConnection {
     this.baseUrl = baseUrl;
   }
 
-  @Nonnull
   @Override
   public LoginStatus login(String user, String password) throws IOException, UploadException {
     if (loginStatus == LoginStatus.LOGGED_IN) {
@@ -106,7 +101,6 @@ public class FZPWUploadConnection implements UploadConnection {
     return loginStatus;
   }
 
-  @Nonnull
   @Override
   public String upload(final Path file) throws IOException, UploadException {
     final URI url = makeUrl("?az=upload_file&forum=");
@@ -152,7 +146,6 @@ public class FZPWUploadConnection implements UploadConnection {
     loginStatus = LoginStatus.DISCONNECTED;
   }
 
-  @Nonnull
   @Override
   public LoginStatus getLoginStatus() {
     return loginStatus;
