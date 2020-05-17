@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -68,7 +67,6 @@ class FileListModel extends AbstractListModel<String> implements Iterable<Path> 
     return Objects.toString(files.get(index).getFileName());
   }
 
-  @Nonnull
   @Override
   public Iterator<Path> iterator() {
     return files.iterator();

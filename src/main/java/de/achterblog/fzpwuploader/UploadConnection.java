@@ -22,16 +22,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Basic interface for classes that upload a file to a login-secured place
  *
  * @author boris
  */
-@ParametersAreNonnullByDefault
 public interface UploadConnection {
   /** The return value for {@link #login(java.lang.String, java.lang.String) login} */
   enum LoginStatus {
@@ -55,8 +50,6 @@ public interface UploadConnection {
    * @throws java.io.IOException Can be forwarded if it occurs within the login-process
    * @throws IllegalStateException If the connection is already logged in
    */
-  @Nonnull
-  @CheckReturnValue
   LoginStatus login(String user, String password) throws UploadException, IOException, IllegalStateException;
 
   /**
@@ -69,7 +62,6 @@ public interface UploadConnection {
    * @throws java.lang.IllegalStateException If the user was not logged in
    * @throws java.io.IOException Can be forwarded if it occurs within the upload
    */
-  @Nonnull
   String upload(Path file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
 
   /**
@@ -81,7 +73,6 @@ public interface UploadConnection {
    * @return {@code true} if successful, {@code false} if an error happened (aside from an
    *         Exception, e.g. the answer was not unknown to the implementation)
    */
-  @CheckReturnValue
   boolean logout();
 
   /** Completely disconnect from the server. May close connections, wipe login-data etc. */
@@ -89,6 +80,5 @@ public interface UploadConnection {
 
   /** Return the current LoginStatus of this connection */
 
-  @Nonnull
   LoginStatus getLoginStatus();
 }

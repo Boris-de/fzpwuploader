@@ -20,14 +20,11 @@ package de.achterblog.util.log;
 
 import java.io.Writer;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * A simple StringWriter that tries to keep the size of the String below a given maximum.
  *
  * @author boris
  */
-@ParametersAreNonnullByDefault
 final class MaxLengthStringBufferWriter extends Writer {
   private final int maxSize;
   private final StringBuffer buffer = new StringBuffer();

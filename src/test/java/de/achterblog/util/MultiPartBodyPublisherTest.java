@@ -19,21 +19,21 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class MultiPartBodyPublisherTest {
+public class MultiPartBodyPublisherTest {
   private FileSystem inMemoryFileSystem;
 
   @BeforeEach
-  void setUp() {
+  public void setUp() {
     inMemoryFileSystem = Jimfs.newFileSystem();
   }
 
   @AfterEach
-  void tearDown() throws IOException {
+  public void tearDown() throws IOException {
     inMemoryFileSystem.close();
   }
 
   @Test
-  void test() throws IOException {
+  public void test() throws IOException {
     final var path = inMemoryFileSystem.getPath("path");
     Files.writeString(path, "content");
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8, () -> "###boundary###")) {
@@ -60,7 +60,7 @@ class MultiPartBodyPublisherTest {
   }
 
   @Test
-  void testMissingParts() throws IOException {
+  public void testMissingParts() throws IOException {
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8)) {
       final var e = assertThrows(IllegalStateException.class, publisher::build);
       assertThat(e.getMessage(), is("No parts defined yet"));
@@ -68,7 +68,7 @@ class MultiPartBodyPublisherTest {
   }
 
   @Test
-  void testCannotReadFromFile() throws IOException {
+  public void testCannotReadFromFile() throws IOException {
     final var path = inMemoryFileSystem.getPath("path");
     Files.createDirectories(path);
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8)) {
