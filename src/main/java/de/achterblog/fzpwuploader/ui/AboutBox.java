@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 
 import javax.swing.JDialog;
 
+import de.achterblog.util.ApplicationProperties;
+
 /**
  * An ugly AboutBox
  *
@@ -63,6 +65,8 @@ public class AboutBox extends JDialog {
     setTitle("About");
     setResizable(false);
 
+    versionLabel.setText("fzpwuploader " + ApplicationProperties.INSTANCE.getVersion());
+
     javaLabel.setText("Running Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vendor"));
 
     osLabel.setText("System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " running on " + System.getProperty("os.arch"));
@@ -80,6 +84,7 @@ public class AboutBox extends JDialog {
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addComponent(versionLabel)
           .addComponent(javaLabel)
           .addComponent(osLabel)
           .addComponent(copyrightLabel)
@@ -91,6 +96,8 @@ public class AboutBox extends JDialog {
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
+        .addComponent(versionLabel)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(javaLabel)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(osLabel)
@@ -226,6 +233,7 @@ public class AboutBox extends JDialog {
   private javax.swing.JScrollPane jScrollPane2;
   private javax.swing.JTabbedPane jTabbedPane1;
   private final javax.swing.JLabel javaLabel = new javax.swing.JLabel();
+  private final javax.swing.JLabel versionLabel = new javax.swing.JLabel();
   private javax.swing.JTextArea licenseTextArea;
   private final javax.swing.JLabel osLabel = new javax.swing.JLabel();
   private javax.swing.JLabel qosNoticeLabel;

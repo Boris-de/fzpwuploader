@@ -42,6 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import de.achterblog.util.ApplicationProperties;
 import de.achterblog.util.MultiPartBodyPublisher;
 import de.achterblog.util.RuntimeIOException;
 import de.achterblog.util.log.Level;
@@ -154,7 +155,7 @@ public class FZPWUploadConnection implements UploadConnection {
   private HttpResponse<String> sendRequest(HttpRequest.Builder requestBuilder) throws IOException, UploadException {
     try {
       final HttpRequest request = requestBuilder
-        .header("User-Agent", "fzpwuploader")
+        .header("User-Agent", "fzpwuploader/" + ApplicationProperties.INSTANCE.getVersion())
         .timeout(Duration.ofSeconds(30))
         .build();
       final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(FZPW_CHARSET));

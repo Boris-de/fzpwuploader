@@ -33,6 +33,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.achterblog.fzpwuploader.UploadBatch;
 import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
+import de.achterblog.util.ApplicationProperties;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
 
@@ -72,7 +73,7 @@ public class Uploader extends javax.swing.JFrame {
     menuItemAbout = new javax.swing.JMenuItem();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("Uploader");
+    setTitle("fzpwuploader " + ApplicationProperties.INSTANCE.getVersion());
 
     fileList.setModel(FileListModel.EMPTY_MODEL);
     jScrollPane1.setViewportView(fileList);
