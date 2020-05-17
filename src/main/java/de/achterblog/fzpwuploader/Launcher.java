@@ -38,23 +38,7 @@ public class Launcher {
   public static void main(String[] args) {
     setLookAndFeel();
 
-    checkJavaVersion();
-
     java.awt.EventQueue.invokeLater(() -> new Uploader().setVisible(true));
-  }
-
-  private static void checkJavaVersion() throws HeadlessException {
-    String javaVersionStr = System.getProperty("java.version");
-    if (javaVersionStr == null || javaVersionStr.length() < 3) {
-      javaVersionStr = "0.0";
-    }
-
-    BigDecimal javaVersion = new BigDecimal(javaVersionStr.substring(0, 3));
-    if (javaVersion.compareTo(new BigDecimal("1.6")) < 0) {
-      String javaVendor = System.getProperty("java.vendor");
-      JOptionPane.showMessageDialog(null, "Your java maybe too old, this tool may not start.\n"
-              + "Your Java-version is " + javaVersionStr + " from " + javaVendor, "Java too old?", JOptionPane.WARNING_MESSAGE);
-    }
   }
 
   private static void setLookAndFeel() {
