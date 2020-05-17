@@ -19,12 +19,14 @@
 package de.achterblog.fzpwuploader;
 
 import de.achterblog.fzpwuploader.ui.Uploader;
+import de.achterblog.util.log.Level;
+import de.achterblog.util.log.Logger;
+
 import java.awt.HeadlessException;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import org.slf4j.LoggerFactory;
 
 /**
  * Seperate Launcher too have as few dependencies on classes as possible at
@@ -59,7 +61,7 @@ public class Launcher {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (ReflectiveOperationException | UnsupportedLookAndFeelException e) {
-      LoggerFactory.getLogger(Launcher.class).warn("Error setting native LaF", e);
+      Logger.log(Level.WARN, "Error setting native LaF", e);
     }
   }
 }

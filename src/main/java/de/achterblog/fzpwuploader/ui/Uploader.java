@@ -18,9 +18,6 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
-import de.achterblog.fzpwuploader.UploadBatch;
-import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
-
 import java.awt.event.InputEvent;
 import java.io.File;
 import java.nio.file.Path;
@@ -31,20 +28,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import de.achterblog.fzpwuploader.UploadBatch;
+import de.achterblog.fzpwuploader.UploadBatch.UploadBatchCallback;
+import de.achterblog.util.log.Level;
+import de.achterblog.util.log.Logger;
 
 /**
  *
  * @author boris
  */
 public class Uploader extends javax.swing.JFrame {
-  private static final Logger logger = LoggerFactory.getLogger(Uploader.class);
-
   /** Creates new form Uploader */
   public Uploader() {
     initComponents();
@@ -195,9 +191,9 @@ public class Uploader extends javax.swing.JFrame {
     int returnVal = chooser.showOpenDialog(null);
     if (returnVal == JFileChooser.APPROVE_OPTION) {
       files = getSelectedPaths(chooser);
-      logger.debug("Selected {} files", files.size());
+      Logger.log(Level.DEBUG, "Selected " + files.size() + " files");
     } else {
-      logger.debug("No files selected");
+      Logger.log(Level.DEBUG, "No files selected");
       files = Collections.emptyList();
     }
     fileList.setModel(new FileListModel(files));
@@ -291,7 +287,7 @@ public class Uploader extends javax.swing.JFrame {
         urlOutputArea.setText(get());
         activityProgressBar.setVisible(false);
       } catch (InterruptedException | ExecutionException e) {
-        logger.error("Exception in Future.get()", e);
+        Logger.log(Level.ERROR, "Exception in Future.get()", e);
       }
       Uploader.this.setEnabled(true);
     }

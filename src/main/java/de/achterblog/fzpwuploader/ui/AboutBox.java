@@ -201,10 +201,7 @@ public class AboutBox extends JDialog {
 
   private String getBundledLicensesText() {
     try {
-      final String LINE = "\n---------------------------------------\n";
-      return getResource("/bundled-licenses.txt") +
-        LINE + "Full text of the LGPL 2.1 follows\n" + LINE +
-        getResource("/lgpl-2.1.txt");
+      return getResource("/bundled-licenses.txt");
     } catch (IOException e) {
       return "Could not read bundled licenses. Perhaps this package does not contain any?";
     }
