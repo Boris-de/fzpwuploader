@@ -33,25 +33,16 @@
       </plugin>
 
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.3.0.RELEASE</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-            <configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifest>
               <mainClass>de.achterblog.fzpwuploader.Launcher</mainClass>
-              <excludes>
-                <exclude>
-                  <groupId>com.google.code.findbugs</groupId>
-                  <artifactId>jsr305</artifactId>
-                </exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
     </plugins>
   </build>
