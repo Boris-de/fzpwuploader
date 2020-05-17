@@ -52,8 +52,6 @@ public class AboutBox extends JDialog {
     jTabbedPane1 = new javax.swing.JTabbedPane();
     jPanel1 = new javax.swing.JPanel();
     copyrightLabel = new javax.swing.JLabel();
-    apacheNoticeLabel = new javax.swing.JLabel();
-    qosNoticeLabel = new javax.swing.JLabel();
     jPanel2 = new javax.swing.JPanel();
     jScrollPane1 = new javax.swing.JScrollPane();
     licenseTextArea = new javax.swing.JTextArea();
@@ -73,10 +71,6 @@ public class AboutBox extends JDialog {
 
     copyrightLabel.setText("<html>© 2009-2014 achterblog.de<br>This tool is published under the terms of the GPLv3 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
 
-    apacheNoticeLabel.setText("<html>This product includes software developed by<br>The Apache Software Foundation (https://www.apache.org/).");
-
-    qosNoticeLabel.setText("<html>This product includes software developed by qos.ch<br>which is Copyright (c) 2004-2013 QOS.ch  All rights reserved.");
-
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -87,9 +81,7 @@ public class AboutBox extends JDialog {
           .addComponent(versionLabel)
           .addComponent(javaLabel)
           .addComponent(osLabel)
-          .addComponent(copyrightLabel)
-          .addComponent(apacheNoticeLabel)
-          .addComponent(qosNoticeLabel))
+          .addComponent(copyrightLabel))
         .addContainerGap(13, Short.MAX_VALUE))
     );
     jPanel1Layout.setVerticalGroup(
@@ -103,10 +95,6 @@ public class AboutBox extends JDialog {
         .addComponent(osLabel)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addComponent(copyrightLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(apacheNoticeLabel)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(qosNoticeLabel)
         .addContainerGap(17, Short.MAX_VALUE))
     );
 
@@ -223,7 +211,6 @@ public class AboutBox extends JDialog {
   }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JLabel apacheNoticeLabel;
   private javax.swing.JTextArea bundledLicensesTextArea;
   private javax.swing.JLabel copyrightLabel;
   private javax.swing.JPanel jPanel1;
@@ -236,6 +223,5 @@ public class AboutBox extends JDialog {
   private final javax.swing.JLabel versionLabel = new javax.swing.JLabel();
   private javax.swing.JTextArea licenseTextArea;
   private final javax.swing.JLabel osLabel = new javax.swing.JLabel();
-  private javax.swing.JLabel qosNoticeLabel;
   // End of variables declaration//GEN-END:variables
 }
