@@ -18,18 +18,14 @@
  */
 package de.achterblog.fzpwuploader;
 
+import javax.swing.*;
+
 import de.achterblog.fzpwuploader.ui.Uploader;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
 
-import java.awt.HeadlessException;
-import java.math.BigDecimal;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 /**
- * Seperate Launcher too have as few dependencies on classes as possible at
+ * Separate Launcher too have as few dependencies on classes as possible at
  * launch-time to check the java-version <b>before</b> a ClassNotFound is thrown...
  *
  * @author boris

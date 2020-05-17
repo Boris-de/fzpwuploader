@@ -114,7 +114,8 @@ class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
       width = MAX_SIZE;
       height = smallerSide;
     } else {
-      width = height = MAX_SIZE;
+      height = MAX_SIZE;
+      width = MAX_SIZE;
     }
 
 
