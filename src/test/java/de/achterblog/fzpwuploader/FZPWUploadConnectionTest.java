@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -149,16 +150,16 @@ public class FZPWUploadConnectionTest {
     String uploadedUrl = connection.upload(testFile);
     assertEquals(uploadedUrl, nextResponse);
     assertThat(lastFileItems.size(), is(4));
-    for (FileItem cur : lastFileItems) {
-      String fieldName = cur.getFieldName();
-      if (null != fieldName) switch (fieldName) {
-        case "az" -> assertEquals("upload_file", cur.getString());
-        case "command" -> assertEquals("save", cur.getString());
-        case "file_type" -> assertEquals("jpg", cur.getString());
-        case "file_upload" -> assertArrayEquals(fileContents, IOUtils.toByteArray(cur.getInputStream()));
-        default -> fail("Unexpected item: " + fieldName);
-      }
-    }
+
+    final Function<String, FileItem> getFieldValue = key -> lastFileItems.stream()
+      .filter(it -> key.equals(it.getFieldName()))
+      .findFirst()
+      .orElseThrow(() -> new AssertionError("Did not find " + key));
+
+    assertThat(getFieldValue.apply("az").getString(), is("upload_file"));
+    assertThat(getFieldValue.apply("command").getString(), is("save"));
+    assertThat(getFieldValue.apply("file_type").getString(), is("jpg"));
+    assertArrayEquals(fileContents, IOUtils.toByteArray(getFieldValue.apply("file_upload").getInputStream()));
   }
 
   @Test
