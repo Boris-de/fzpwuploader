@@ -1,7 +1,7 @@
 /*
  * This file is part of the FZPWUploader
  *
- * Copyright (C) 2009-2014 achterblog.de
+ * Copyright (C) 2009-2020 achterblog.de
  *
  * FZPWUploader is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

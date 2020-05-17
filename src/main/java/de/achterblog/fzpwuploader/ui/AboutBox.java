@@ -1,7 +1,7 @@
 /*
  * This file is part of the FZPWUploader
  *
- * Copyright (C) 2009-2014 achterblog.de
+ * Copyright (C) 2009-2020 achterblog.de
  *
  * FZPWUploader is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ public class AboutBox extends JDialog {
 
     osLabel.setText("System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " running on " + System.getProperty("os.arch"));
 
-    copyrightLabel.setText("<html>© 2009-2014 achterblog.de<br>This tool is published under the terms of the GPLv3 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
+    copyrightLabel.setText("<html>© 2009-2020 achterblog.de<br>This tool is published under the terms of the GPLv3 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
 
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
