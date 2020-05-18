@@ -77,9 +77,9 @@ public class MultiPartBodyPublisherTest {
       final var build = publisher.build();
 
       final var subscriber = new ByteBuffersToStringSubscriber();
-      final var e = assertThrows(IllegalStateException.class, () -> build.subscribe(subscriber));
-      assertThat(e.getCause(), instanceOf(RuntimeIOException.class));
-      assertThat(e.getCause().getMessage(), is("IOException while generating multi parts: path: not a regular file"));
+      final var e = assertThrows(RuntimeIOException.class, () -> build.subscribe(subscriber));
+      assertThat(e, instanceOf(RuntimeIOException.class));
+      assertThat(e.getMessage(), is("IOException while generating multi parts: path: not a regular file"));
     }
   }
 
@@ -99,7 +99,7 @@ public class MultiPartBodyPublisherTest {
 
     @Override
     public void onError(Throwable t) {
-      throw new IllegalStateException(t);
+      throw t instanceof RuntimeException ? (RuntimeException) t : new IllegalStateException("Subscriber.onError", t);
     }
 
     @Override
