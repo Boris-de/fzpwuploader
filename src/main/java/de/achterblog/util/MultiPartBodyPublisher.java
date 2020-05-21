@@ -192,7 +192,7 @@ public class MultiPartBodyPublisher implements Closeable {
       if (currentStream != null) {
         try {
           final int read = currentStream.read();
-          if (read > 0) {
+          if (read >= 0) {
             currentStream.unread(read);
             return true;
           }
