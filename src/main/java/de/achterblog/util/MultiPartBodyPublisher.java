@@ -18,6 +18,7 @@
  */
 package de.achterblog.util;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -164,7 +165,7 @@ public class MultiPartBodyPublisher implements Closeable {
 
     @Override
     InputStream asStream() throws IOException {
-      return Files.newInputStream(path);
+      return new BufferedInputStream(Files.newInputStream(path));
     }
   }
 
