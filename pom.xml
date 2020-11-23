@@ -11,7 +11,7 @@
   <properties>
     <java.version>11</java.version>
 
-    <version.jetty>9.4.28.v20200408</version.jetty>
+    <version.jetty>9.4.34.v20201102</version.jetty>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
