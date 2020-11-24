@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - name: Archive installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: fzpwuploader.jar
+        path: ./target/fzpwuploader*.jar
+
+  installer:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 15
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - name: Create installer
+      shell: pwsh
+      run: |
+        .\create-windows-package.ps1 target/fzpwuploader-*.jar 0.1.${env:GITHUB_RUN_NUMBER} server
+    - name: Archive installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: fzpwuploader.exe
+        path: ./*.exe
