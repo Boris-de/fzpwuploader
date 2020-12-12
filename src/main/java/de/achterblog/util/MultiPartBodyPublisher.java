@@ -77,7 +77,7 @@ public class MultiPartBodyPublisher implements Closeable {
     validState(Files.exists(path), "File does not exist");
     return this.addPart(new FilePart(name, path, filename, contentType))
                .addPart(new FileContentPart(path))
-      .addPart(new LineBreakPart());
+               .addPart(new LineBreakPart());
   }
 
   private MultiPartBodyPublisher addPart(Part e) {
@@ -86,6 +86,7 @@ public class MultiPartBodyPublisher implements Closeable {
   }
 
   private void addEndOfMultiPartPart() {
+    //noinspection resource
     addPart(new FinalBoundaryPart());
   }
 
