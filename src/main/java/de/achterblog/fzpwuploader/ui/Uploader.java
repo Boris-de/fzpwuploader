@@ -18,11 +18,13 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,207 +40,215 @@ import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
 
 /**
+ * UI implementation of Main window.
  *
- * @author boris
+ * (this was initially created with the Netbeans Form editor, but is now just this java file)
  */
-public class Uploader extends javax.swing.JFrame {
+public class Uploader extends JFrame {
+  private final JProgressBar activityProgressBar;
+  private final JList<String> fileList = new JList<>();
+  private final JProgressBar progressBar = new JProgressBar();
+  private final JPasswordField textFieldPassword = new JPasswordField();
+  private final JTextField textFieldUsername = new JTextField();
+  private final JTextArea urlOutputArea = new JTextArea();
+
   /** Creates new form Uploader */
   public Uploader() {
-    initComponents();
+    activityProgressBar = new JProgressBar();
+    activityProgressBar.setIndeterminate(true);
+
+    final var scrollPane = new JScrollPane();
+
+    setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    setTitle("fzpwuploader " + ApplicationProperties.INSTANCE.getVersion());
+
+    fileList.setModel(FileListModel.EMPTY_MODEL);
+    scrollPane.setViewportView(fileList);
+
+    final JLabel lableUser = createLabel(textFieldUsername, "User:");
+    final JLabel labelPassword = createLabel(textFieldPassword, "Password:");
+
+    progressBar.setStringPainted(true);
+
+    final JButton buttonSelect = createButton("Select...", this::buttonSelectActionPerformed);
+    final JButton buttonUpload = createButton("Upload", this::buttonUploadActionPerformed);
+
+    final var scrollPaneUrlOutput = new JScrollPane();
+    urlOutputArea.setColumns(20);
+    urlOutputArea.setEditable(false);
+    urlOutputArea.setRows(5);
+    scrollPaneUrlOutput.setViewportView(urlOutputArea);
+
+    setJMenuBar(createMenuBar());
+
+    final var layout = new GroupLayout(getContentPane());
+    getContentPane().setLayout(layout);
+    layout.setHorizontalGroup(
+      layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(lableUser)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(textFieldUsername, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+            .addGap(14, 14, 14)
+            .addComponent(labelPassword)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(textFieldPassword, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 145, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+              .addComponent(scrollPaneUrlOutput, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(buttonSelect)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonUpload)
+                .addGap(18, 18, 18)
+                .addComponent(activityProgressBar, GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+              .addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))))
+        .addContainerGap())
+    );
+    layout.setVerticalGroup(
+      layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+      .addGroup(layout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+          .addComponent(lableUser)
+          .addComponent(textFieldUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+          .addComponent(labelPassword)
+          .addComponent(textFieldPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+          .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addComponent(scrollPaneUrlOutput, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+            .addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+              .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(buttonSelect)
+                .addComponent(buttonUpload))
+              .addComponent(activityProgressBar, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+            .addGap(7, 7, 7))
+          .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
+        .addContainerGap())
+    );
+
+    pack();
 
     progressBar.setValue(0);
     activityProgressBar.setVisible(false);
   }
 
-  /** This method is called from within the constructor to
-   * initialize the form.
-   * WARNING: Do NOT modify this code. The content of this method is
-   * always regenerated by the Form Editor.
-   */
-  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-  private void initComponents() {
-
-    jScrollPane1 = new javax.swing.JScrollPane();
-    lableUser = new javax.swing.JLabel();
-    labelPassword = new javax.swing.JLabel();
-    buttonSelect = new javax.swing.JButton();
-    buttonUpload = new javax.swing.JButton();
-    jScrollPane2 = new javax.swing.JScrollPane();
-    activityProgressBar = new javax.swing.JProgressBar();
-    menuBar = new javax.swing.JMenuBar();
-    menuFile = new javax.swing.JMenu();
-    menuItemExit = new javax.swing.JMenuItem();
-    menuQuestionMark = new javax.swing.JMenu();
-    menuItemLog = new javax.swing.JMenuItem();
-    menuItemAbout = new javax.swing.JMenuItem();
-
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("fzpwuploader " + ApplicationProperties.INSTANCE.getVersion());
-
-    fileList.setModel(FileListModel.EMPTY_MODEL);
-    jScrollPane1.setViewportView(fileList);
-
-    lableUser.setLabelFor(textFieldUsername);
-    lableUser.setText("User:");
-
+  private JLabel createLabel(JTextField textFieldPassword, String s) {
+    final var labelPassword = new JLabel();
     labelPassword.setLabelFor(textFieldPassword);
-    labelPassword.setText("Password:");
+    labelPassword.setText(s);
+    return labelPassword;
+  }
 
-    progressBar.setStringPainted(true);
+  private JButton createButton(String text, ActionListener actionListener) {
+    final var button = new JButton();
+    button.setText(text);
+    button.addActionListener(actionListener);
+    return button;
+  }
 
-    buttonSelect.setText("Select...");
-    buttonSelect.addActionListener(this::buttonSelectActionPerformed);
+  private JMenuBar createMenuBar() {
+    final var menuBar = new JMenuBar();
 
-    buttonUpload.setText("Upload");
-    buttonUpload.addActionListener(this::buttonUploadActionPerformed);
-
-    urlOutputArea.setColumns(20);
-    urlOutputArea.setEditable(false);
-    urlOutputArea.setRows(5);
-    jScrollPane2.setViewportView(urlOutputArea);
-
-    activityProgressBar.setIndeterminate(true);
-
+    final var menuFile = new JMenu();
     menuFile.setText("File");
 
-    menuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
-    menuItemExit.setText("Exit");
-    menuItemExit.addActionListener(this::menuItemExitActionPerformed);
+    final var menuItemExit = createMenuItem("Exit", this::menuItemExitActionPerformed);
+    menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
     menuFile.add(menuItemExit);
 
     menuBar.add(menuFile);
 
+    final var menuQuestionMark = new JMenu();
     menuQuestionMark.setText("?");
-
-    menuItemLog.setText("Log");
-    menuItemLog.addActionListener(this::menuItemLogActionPerformed);
-    menuQuestionMark.add(menuItemLog);
-
-    menuItemAbout.setText("About");
-    menuItemAbout.addActionListener(this::menuItemAboutActionPerformed);
-    menuQuestionMark.add(menuItemAbout);
+    menuQuestionMark.add(createMenuItem("Log", this::menuItemLogActionPerformed));
+    menuQuestionMark.add(createMenuItem("About", this::menuItemAboutActionPerformed));
 
     menuBar.add(menuQuestionMark);
+    return menuBar;
+  }
 
-    setJMenuBar(menuBar);
+  private JMenuItem createMenuItem(String text, ActionListener actionListener) {
+    final var menuItem = new JMenuItem();
+    menuItem.setText(text);
+    menuItem.addActionListener(actionListener);
+    return menuItem;
+  }
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(lableUser)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(textFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(14, 14, 14)
-            .addComponent(labelPassword)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(buttonSelect)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonUpload)
-                .addGap(18, 18, 18)
-                .addComponent(activityProgressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
-              .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))))
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(lableUser)
-          .addComponent(textFieldUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(labelPassword)
-          .addComponent(textFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(buttonSelect)
-                .addComponent(buttonUpload))
-              .addComponent(activityProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(7, 7, 7))
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
-        .addContainerGap())
-    );
-
-    pack();
-  }// </editor-fold>//GEN-END:initComponents
-
-  private void buttonSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSelectActionPerformed
-    List<Path> files;
-    JFileChooser chooser = new JFileChooser();
-    FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "jpg", "jpeg");
+  private void buttonSelectActionPerformed(ActionEvent evt) {
+    final var chooser = new JFileChooser();
+    final var filter = new FileNameExtensionFilter("Images", "jpg", "jpeg");
     chooser.setFileFilter(filter);
     chooser.setMultiSelectionEnabled(true);
-    ImagePreviewAccessory preview = new ImagePreviewAccessory();
+
+    final var preview = new ImagePreviewAccessory();
     chooser.setAccessory(preview);
     chooser.addPropertyChangeListener(preview);
-    int returnVal = chooser.showOpenDialog(null);
-    if (returnVal == JFileChooser.APPROVE_OPTION) {
-      files = getSelectedPaths(chooser);
-      Logger.log(Level.DEBUG, "Selected " + files.size() + " files");
-    } else {
-      Logger.log(Level.DEBUG, "No files selected");
-      files = Collections.emptyList();
-    }
+
+    final var files = getFilesWithOpenDialog(chooser);
     fileList.setModel(new FileListModel(files));
-}//GEN-LAST:event_buttonSelectActionPerformed
+  }
 
-  private void buttonUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUploadActionPerformed
-      if (textFieldUsername.getText().isEmpty() || textFieldPassword.getPassword().length == 0) {
-        JOptionPane.showMessageDialog(this, "Please enter the login details", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
+  private List<Path> getFilesWithOpenDialog(JFileChooser chooser) {
+    final int returnVal = chooser.showOpenDialog(null);
+    if (returnVal != JFileChooser.APPROVE_OPTION) {
+      Logger.log(Level.DEBUG, "No files selected");
+      return List.of();
+    }
+
+    final var files = getSelectedPaths(chooser);
+    Logger.log(Level.DEBUG, "Selected " + files.size() + " files");
+    return files;
+  }
+
+  private void buttonUploadActionPerformed(ActionEvent evt) {
+    if (textFieldUsername.getText().isEmpty() || textFieldPassword.getPassword().length == 0) {
+      JOptionPane.showMessageDialog(this, "Please enter the login details", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+
+    final var list = (FileListModel) this.fileList.getModel();
+    this.fileList.setModel(FileListModel.EMPTY_MODEL);
+
+    if (list.getSize() == 0 || list.getSize() > 20) {
+      JOptionPane.showMessageDialog(this, "Only 1-20 file are allowed", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+
+    progressBar.setValue(0);
+    progressBar.setMaximum(list.getSize());
+    Uploader.this.setEnabled(false);
+
+    SwingWorker<String, Integer> task = new BackgroundUpload(list);
+    task.addPropertyChangeListener(evt1 -> {
+      if ("progress".equals(evt1.getPropertyName())) {
+        progressBar.setValue((Integer) evt1.getNewValue());
       }
+    });
+    activityProgressBar.setVisible(true);
+    task.execute();
+  }
 
-      FileListModel list = (FileListModel) this.fileList.getModel();
-      this.fileList.setModel(FileListModel.EMPTY_MODEL);
+  private void menuItemExitActionPerformed(ActionEvent evt) {
+    System.exit(0);
+  }
 
-      if (list.getSize() == 0 || list.getSize() > 20) {
-        JOptionPane.showMessageDialog(this, "Only 1-20 file are allowed", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-      }
+  private void menuItemAboutActionPerformed(ActionEvent evt) {
+    new AboutBox(this).setVisible(true);
+  }
 
-      progressBar.setValue(0);
-      progressBar.setMaximum(list.getSize());
-      Uploader.this.setEnabled(false);
-
-      SwingWorker<String, Integer> task = new BackgroundUpload(list);
-      task.addPropertyChangeListener(evt1 -> {
-        if ("progress".equals(evt1.getPropertyName())) {
-          progressBar.setValue((Integer) evt1.getNewValue());
-        }
-      });
-      activityProgressBar.setVisible(true);
-      task.execute();
-}//GEN-LAST:event_buttonUploadActionPerformed
-
-    private void menuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemExitActionPerformed
-      System.exit(0);
-}//GEN-LAST:event_menuItemExitActionPerformed
-
-    private void menuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemAboutActionPerformed
-      new AboutBox(this, true).setVisible(true);
-}//GEN-LAST:event_menuItemAboutActionPerformed
-
-    private void menuItemLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemLogActionPerformed
-      new LogView(this, true).setVisible(true);
-}//GEN-LAST:event_menuItemLogActionPerformed
+  private void menuItemLogActionPerformed(ActionEvent evt) {
+    new LogView(this).setVisible(true);
+  }
 
   private static List<Path> getSelectedPaths(JFileChooser chooser) {
     return Arrays.stream(chooser.getSelectedFiles())
@@ -246,28 +256,7 @@ public class Uploader extends javax.swing.JFrame {
       .collect(Collectors.toList());
   }
 
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JProgressBar activityProgressBar;
-  private javax.swing.JButton buttonSelect;
-  private javax.swing.JButton buttonUpload;
-  private final javax.swing.JList<String> fileList = new javax.swing.JList<>();
-  private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JScrollPane jScrollPane2;
-  private javax.swing.JLabel labelPassword;
-  private javax.swing.JLabel lableUser;
-  private javax.swing.JMenuBar menuBar;
-  private javax.swing.JMenu menuFile;
-  private javax.swing.JMenuItem menuItemAbout;
-  private javax.swing.JMenuItem menuItemExit;
-  private javax.swing.JMenuItem menuItemLog;
-  private javax.swing.JMenu menuQuestionMark;
-  private final javax.swing.JProgressBar progressBar = new javax.swing.JProgressBar();
-  private final javax.swing.JPasswordField textFieldPassword = new javax.swing.JPasswordField();
-  private final javax.swing.JTextField textFieldUsername = new javax.swing.JTextField();
-  private final javax.swing.JTextArea urlOutputArea = new javax.swing.JTextArea();
-  // End of variables declaration//GEN-END:variables
-
-  private class BackgroundUpload extends SwingWorker<String, Integer> {
+  private final class BackgroundUpload extends SwingWorker<String, Integer> {
     private final FileListModel fileList;
     private final AtomicInteger uploadCount = new AtomicInteger(0);
 
@@ -277,8 +266,8 @@ public class Uploader extends javax.swing.JFrame {
 
     @Override
     public String doInBackground() {
-      final String username = textFieldUsername.getText();
-      final String password = new String(textFieldPassword.getPassword());
+      final var username = textFieldUsername.getText();
+      final var password = new String(textFieldPassword.getPassword());
       return new UploadBatch(username, password, new UploadBatchCallbackImpl()).upload(fileList);
     }
 
