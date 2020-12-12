@@ -11,7 +11,6 @@
   <properties>
     <java.version>11</java.version>
 
-    <version.jetty>9.4.35.v20201120</version.jetty>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -42,6 +41,7 @@
           <source>${java.version}</source>
           <target>${java.version}</target>
           <release>${java.version}</release>
+          <compilerArgs>-Xlint:deprecation</compilerArgs>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -80,20 +80,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
-      <version>${version.jetty}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-servlet</artifactId>
-      <version>${version.jetty}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
+      <version>11.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -106,6 +93,13 @@
       <groupId>commons-fileupload</groupId>
       <artifactId>commons-fileupload</artifactId>
       <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- needed for commons-fileupload -->
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -123,7 +117,8 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.30</version>
+      <!-- jetty uses this alpha -->
+      <version>2.0.0-alpha1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
