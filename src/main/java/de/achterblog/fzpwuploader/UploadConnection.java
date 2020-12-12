@@ -28,7 +28,7 @@ import java.nio.file.Path;
  * @author boris
  */
 public interface UploadConnection {
-  /** The return value for {@link #login(java.lang.String, java.lang.String) login} */
+  /** The return value for {@link #login(String, String) login} */
   enum LoginStatus {
     /** The login was successful and the Connection can be used to upload. */
     LOGGED_IN,
@@ -47,7 +47,7 @@ public interface UploadConnection {
    * @param user The user that should be logged in
    * @param password The password for this user
    * @return The status of the login, see {@link LoginStatus}
-   * @throws java.io.IOException Can be forwarded if it occurs within the login-process
+   * @throws IOException Can be forwarded if it occurs within the login-process
    * @throws IllegalStateException If the connection is already logged in
    */
   LoginStatus login(String user, String password) throws UploadException, IOException, IllegalStateException;
@@ -58,9 +58,9 @@ public interface UploadConnection {
    * @param file The file to be uploaded
    * @return The URL of the uploaded file. Should never return null, instead throw an exception
    * @throws UploadException If something goes wrong in the upload
-   * @throws java.io.FileNotFoundException If the file to be uploaded does not exist
-   * @throws java.lang.IllegalStateException If the user was not logged in
-   * @throws java.io.IOException Can be forwarded if it occurs within the upload
+   * @throws FileNotFoundException If the file to be uploaded does not exist
+   * @throws IllegalStateException If the user was not logged in
+   * @throws IOException Can be forwarded if it occurs within the upload
    */
   String upload(Path file) throws FileNotFoundException, UploadException, IOException, IllegalStateException;
 
@@ -79,6 +79,5 @@ public interface UploadConnection {
   void disconnect();
 
   /** Return the current LoginStatus of this connection */
-
   LoginStatus getLoginStatus();
 }

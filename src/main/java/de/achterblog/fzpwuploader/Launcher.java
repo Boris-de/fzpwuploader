@@ -18,6 +18,8 @@
  */
 package de.achterblog.fzpwuploader;
 
+import java.awt.EventQueue;
+
 import javax.swing.*;
 
 import de.achterblog.fzpwuploader.ui.Uploader;
@@ -34,7 +36,7 @@ public class Launcher {
   public static void main(String[] args) {
     setLookAndFeel();
 
-    java.awt.EventQueue.invokeLater(() -> new Uploader().setVisible(true));
+    EventQueue.invokeLater(() -> new Uploader().setVisible(true));
   }
 
   private static void setLookAndFeel() {
