@@ -30,11 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -54,6 +49,10 @@ import com.google.common.jimfs.Jimfs;
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -190,7 +189,7 @@ public class FZPWUploadConnectionTest {
         try {
           FileItemFactory factory = new DiskFileItemFactory();
           ServletFileUpload upload = new ServletFileUpload(factory);
-          lastFileItems = upload.parseRequest(req);
+          lastFileItems = upload.parseRequest(new JakartaRequestContext(req));
         } catch (FileUploadException e) {
           Logger.log(Level.ERROR, "FileUploadException", e);
           resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "FileUploadException");
@@ -212,4 +211,5 @@ public class FZPWUploadConnectionTest {
       resp.getWriter().close();
     }
   }
+
 }
