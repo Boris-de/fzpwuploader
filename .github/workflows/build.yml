@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - boris/*
+    tags:
+      - '*'
   pull_request:
     branches: [ main ]
 
@@ -44,7 +46,17 @@ jobs:
     - name: Create installer
       shell: pwsh
       run: |
-        .\create-windows-package.ps1 target/fzpwuploader-*.jar 0.1.${env:GITHUB_RUN_NUMBER} server
+        $pom_xml = New-Object -TypeName XML
+        $pom_xml.Load((Get-Location).tostring() + "\pom.xml")
+        $full_version = $pom_xml.project.version
+        if ($full_version -match "-SNAPSHOT$") {
+          $version = $full_version -replace "-SNAPSHOT", ""
+          $version = $version - 0.1 # use previous version as a base for snapshots
+          $version = "${version}.9${env:GITHUB_RUN_NUMBER}" # make it a high value
+        } else {
+          $version = $full_version
+        }
+        .\create-windows-package.ps1 "target/fzpwuploader-${full_version}.jar" "${version}" server
     - name: Archive installer
       uses: actions/upload-artifact@v2
       with:

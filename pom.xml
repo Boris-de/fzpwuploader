@@ -4,7 +4,7 @@
   <groupId>de.achterblog</groupId>
   <artifactId>fzpwuploader</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.1-SNAPSHOT</version>
+  <version>0.3-SNAPSHOT</version>
   <name>fzpwuploader</name>
   <url>https://achterblog.de</url>
 
