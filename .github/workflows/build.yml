@@ -29,36 +29,3 @@ jobs:
       with:
         name: fzpwuploader.jar
         path: ./target/fzpwuploader*.jar
-
-  installer:
-
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-      with:
-        java-version: 16
-        distribution: 'adopt'
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Create installer
-      shell: pwsh
-      run: |
-        $pom_xml = New-Object -TypeName XML
-        $pom_xml.Load((Get-Location).tostring() + "\pom.xml")
-        $full_version = $pom_xml.project.version
-        if ($full_version -match "-SNAPSHOT$") {
-          $version = $full_version -replace "-SNAPSHOT", ""
-          $version = $version - 0.1 # use previous version as a base for snapshots
-          $version = "${version}.9${env:GITHUB_RUN_NUMBER}" # make it a high value
-        } else {
-          $version = $full_version
-        }
-        .\create-windows-package.ps1 "target/fzpwuploader-${full_version}.jar" "${version}" server
-    - name: Archive installer
-      uses: actions/upload-artifact@v2
-      with:
-        name: fzpwuploader.exe
-        path: ./*.exe
