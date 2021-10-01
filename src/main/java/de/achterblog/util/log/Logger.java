@@ -42,7 +42,7 @@ public final class Logger {
 
   public static void log(Level level, Supplier<String> messageSupplier, Throwable e) {
     if (level.compareTo(LOG_LEVEL) >= 0) {
-      final var newLine = System.lineSeparator();
+      final String newLine = System.lineSeparator();
       final PrintStream target = level.compareTo(Level.WARN) >= 0 ? System.err : System.out;
       final StringBuilder messageBuilder = new StringBuilder();
       messageBuilder.append(ZonedDateTime.now())

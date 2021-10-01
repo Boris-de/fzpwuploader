@@ -18,6 +18,7 @@
  */
 package de.achterblog.fzpwuploader.ui;
 
+import java.io.Serial;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Iterator;
@@ -32,6 +33,7 @@ import javax.swing.*;
  * @author boris
  */
 class FileListModel extends AbstractListModel<String> implements Iterable<Path> {
+  @Serial
   private static final long serialVersionUID = 1L;
 
   private final List<Path> files;

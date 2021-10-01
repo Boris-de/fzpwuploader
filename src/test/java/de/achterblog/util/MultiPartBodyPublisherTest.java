@@ -45,17 +45,18 @@ public class MultiPartBodyPublisherTest {
       final var subscriber = new ByteBuffersToStringSubscriber();
       build.subscribe(subscriber);
 
-      assertThat(subscriber.content, is("--###boundary###\r\n" +
-                                          "Content-Disposition: form-data; name=\"name\"\r\n" +
-                                          "Content-Type: text/plain; charset=UTF-8\r\n" +
-                                          "\r\n" +
-                                          "test\r\n" +
-                                          "--###boundary###\r\n" +
-                                          "Content-Disposition: form-data; name=\"name\"; filename=\"path\"\r\n" +
-                                          "Content-Type: image/jpeg\r\n" +
-                                          "\r\n" +
-                                          "content\r\n" +
-                                          "--###boundary###--"));
+      assertThat(subscriber.content, is("""
+                                          --###boundary###\r
+                                          Content-Disposition: form-data; name="name"\r
+                                          Content-Type: text/plain; charset=UTF-8\r
+                                          \r
+                                          test\r
+                                          --###boundary###\r
+                                          Content-Disposition: form-data; name="name"; filename="path"\r
+                                          Content-Type: image/jpeg\r
+                                          \r
+                                          content\r
+                                          --###boundary###--"""));
     }
   }
 

@@ -106,7 +106,7 @@ public class FZPWUploadConnection implements UploadConnection {
   public String upload(final Path file) throws IOException, UploadException {
     final URI url = makeUrl("?az=upload_file&forum=");
 
-    try (final MultiPartBodyPublisher bodyPublisher = new MultiPartBodyPublisher(FZPW_CHARSET)) {
+    try (final var bodyPublisher = new MultiPartBodyPublisher(FZPW_CHARSET)) {
       bodyPublisher.addPart("az", "upload_file")
                    .addPart("command", "save")
                    .addPart("file_upload", file, null, "image/jpeg")

@@ -36,32 +36,23 @@ import de.achterblog.util.log.Logger;
  *
  * @author boris
  */
-public class UploadBatch {
-  private final String username;
-  private final String password;
-  private final UploadBatchCallback callback;
-
-  public UploadBatch(String username, String password, UploadBatchCallback callback) {
-    this.username = username;
-    this.password = password;
-    this.callback = callback;
-  }
+public record UploadBatch(String username, String password, UploadBatchCallback callback) {
 
   public String upload(Iterable<Path> fileList) {
     final UploadConnection con = new FZPWUploadConnection();
     final StringBuilder buffer = new StringBuilder(512);
 
     try {
-      LoginStatus loginStatus = con.login(this.username, this.password);
+      final LoginStatus loginStatus = con.login(username, password);
       if (loginStatus != UploadConnection.LoginStatus.LOGGED_IN) {
-        return "Failed to login user " + this.username + ": " + loginStatus;
+        return "Failed to login user " + username + ": " + loginStatus;
       }
-      ExecutorService exe = Executors.newSingleThreadExecutor();
-      Map<Path, Future<String>> futures = new HashMap<>();
+      final ExecutorService exe = Executors.newSingleThreadExecutor();
+      final Map<Path, Future<String>> futures = new HashMap<>();
       for (final Path cur : fileList) {
         Future<String> f = exe.submit(() -> {
           try {
-            Logger.log(Level.DEBUG, "Starting upload for file " + cur);
+            Logger.log(Level.DEBUG, () -> "Starting upload for file " + cur);
             String result = con.upload(cur);
             callback.uploaded(cur);
             return result;
@@ -83,10 +74,8 @@ public class UploadBatch {
           Logger.log(Level.ERROR, "Exception while executing upload: ", ex);
         }
       }
-    } catch (UploadException e) {
-      Logger.log(Level.ERROR, "UploadException in GUI", e);
-    } catch (IOException e) {
-      Logger.log(Level.ERROR, "IOException in GUI", e);
+    } catch (UploadException | IOException e) {
+      Logger.log(Level.ERROR, "Exception in GUI", e);
     } finally {
       if (!con.logout()) {
         Logger.log(Level.ERROR, "The logout failed, the user may still be logged in");

@@ -37,7 +37,7 @@ public class ApplicationProperties {
   ApplicationProperties(final String resourceName) {
     final Properties tmp = new Properties();
     try (InputStream in = ApplicationProperties.class.getResourceAsStream(resourceName)) {
-      tmp.load(Objects.requireNonNull(in, "Resources is missing"));
+      tmp.load(Objects.requireNonNull(in, () -> "Resources " + resourceName + " is missing"));
     } catch (Exception e) {
       Logger.log(Level.ERROR, () -> "Failed to read " + resourceName, e);
     }

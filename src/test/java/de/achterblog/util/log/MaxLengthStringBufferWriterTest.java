@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MaxLengthStringBufferWriterTest {
   @Test
   public void testZeroLength() {
-    try (MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(0)) {
+    try (var w = new MaxLengthStringBufferWriter(0)) {
       w.append("x");
       assertThat(w.toString(), is(""));
     }
@@ -36,7 +36,7 @@ public class MaxLengthStringBufferWriterTest {
 
   @Test
   public void testSingleCharacter() {
-    try (MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(1)) {
+    try (var w = new MaxLengthStringBufferWriter(1)) {
       w.append("x");
       assertThat(w.toString(), is("x"));
       w.append("y");
@@ -46,7 +46,7 @@ public class MaxLengthStringBufferWriterTest {
 
   @Test
   public void testCutOffIsLineBased() {
-    try (MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(10)) {
+    try (var w = new MaxLengthStringBufferWriter(10)) {
       w.append("12345\n6789");
       assertThat(w.toString(), is("12345\n6789"));
       w.append("y");
@@ -56,7 +56,7 @@ public class MaxLengthStringBufferWriterTest {
 
   @Test
   public void testClose() {
-    try (MaxLengthStringBufferWriter w = new MaxLengthStringBufferWriter(10)) {
+    try (var w = new MaxLengthStringBufferWriter(10)) {
       w.append("1234");
       assertThat(w.toString(), is("1234"));
       w.close();

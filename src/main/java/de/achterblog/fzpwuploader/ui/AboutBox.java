@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.swing.*;
@@ -148,10 +149,11 @@ public class AboutBox extends JDialog {
   }
 
   private String getResource(String s) throws IOException {
-    try (InputStream in = AboutBox.class.getResourceAsStream(s);
-         BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-      return r.lines()
-        .collect(Collectors.joining("\n"));
+    try (var in = AboutBox.class.getResourceAsStream(s)) {
+      Objects.requireNonNull(in, () -> "Could not read resource " + s);
+      try (var r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+        return r.lines().collect(Collectors.joining("\n"));
+      }
     }
   }
 

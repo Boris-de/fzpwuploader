@@ -206,7 +206,7 @@ public class Uploader extends JFrame {
     }
 
     final var files = getSelectedPaths(chooser);
-    Logger.log(Level.DEBUG, "Selected " + files.size() + " files");
+    Logger.log(Level.DEBUG, () -> "Selected " + files.size() + " files");
     return files;
   }
 

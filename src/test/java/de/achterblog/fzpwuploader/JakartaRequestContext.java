@@ -27,15 +27,10 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Wraps a HttpServletRequest into an UploadContext.
- *
+ * <p>
  * (commons-fileupload does not support the jakarta-rename of the servlet classes)
  */
-final class JakartaRequestContext implements UploadContext {
-  private final HttpServletRequest req;
-
-  JakartaRequestContext(HttpServletRequest req) {
-    this.req = req;
-  }
+record JakartaRequestContext(HttpServletRequest req) implements UploadContext {
 
   @Override
   public String getCharacterEncoding() {

@@ -20,6 +20,7 @@ package de.achterblog.fzpwuploader;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serial;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -140,9 +141,7 @@ public class FZPWUploadConnectionTest {
     final byte[] fileContents = new byte[]{(byte) 255, (byte) 216, (byte) 97, (byte) 255, (byte) 217};
 
     final Path testFile = inMemoryfileSystem.getPath("testUpload.test");
-    try (OutputStream out = Files.newOutputStream(testFile)) {
-      out.write(fileContents);
-    }
+    Files.write(testFile, fileContents);
 
     nextResponse = "Seite wird geladen, einen Moment bitte...";
     connection.login("", "");
@@ -165,9 +164,7 @@ public class FZPWUploadConnectionTest {
   @Test
   public void testUploadFindsNoURL() throws Exception {
     final Path testFile = inMemoryfileSystem.getPath("testUploadFindsNoURL.test");
-    try (OutputStream out = Files.newOutputStream(testFile)) {
-      out.flush();
-    }
+    Files.write(testFile, new byte[0]);
     nextResponse = "Seite wird geladen, einen Moment bitte...";
     connection.login("", "");
     final var e = assertThrows(UploadException.class, () -> connection.upload(testFile));
@@ -175,6 +172,7 @@ public class FZPWUploadConnectionTest {
   }
 
   public static final class TestServlet extends HttpServlet {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Override

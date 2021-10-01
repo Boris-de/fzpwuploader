@@ -1,5 +1,7 @@
 package de.achterblog.util.log;
 
+import java.io.Serial;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,6 +47,7 @@ public class LoggerTest {
   }
 
   private static final class LoggerTestException extends Exception {
-
+    @Serial
+    private static final long serialVersionUID = 1L;
   }
 }
