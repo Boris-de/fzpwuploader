@@ -21,7 +21,6 @@ package de.achterblog.fzpwuploader.ui;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -73,7 +72,8 @@ public class AboutBox extends JDialog {
 
   private JPanel createGeneralPanel() {
     final var versionLabel = createSimpleLabel("fzpwuploader " + ApplicationProperties.INSTANCE.getVersion());
-    final var javaLabel = createSimpleLabel("Running Java " + getProperty("java.version") + " by " + getProperty("java.vendor"));
+    final var vendor = getProperty("java.vm.vendor", getProperty("java.vendor"));
+    final var javaLabel = createSimpleLabel("Running Java " + getProperty("java.version") + " by " + vendor);
     final var osLabel = createSimpleLabel("System: " + getProperty("os.name") + " " + getProperty("os.version") + " running on " + getProperty("os.arch"));
 
     final var copyrightLabel = createSimpleLabel("<html>© 2009-2020 achterblog.de<br>This tool is published under the terms of the GPLv3 or later.<br>See tabs \"License\" and \"Bundled Licenses\" for details.");
@@ -158,7 +158,11 @@ public class AboutBox extends JDialog {
   }
 
   private static String getProperty(String name) {
-    return System.getProperty(name, "unknown");
+    return getProperty(name, "unknown");
+  }
+
+  private static String getProperty(String name, String defaultValue) {
+    return System.getProperty(name, defaultValue);
   }
 
   private static JLabel createSimpleLabel(String text) {
