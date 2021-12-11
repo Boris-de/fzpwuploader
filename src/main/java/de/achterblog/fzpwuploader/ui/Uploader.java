@@ -253,7 +253,7 @@ public class Uploader extends JFrame {
   private static List<Path> getSelectedPaths(JFileChooser chooser) {
     return Arrays.stream(chooser.getSelectedFiles())
       .map(File::toPath)
-      .collect(Collectors.toList());
+      .toList();
   }
 
   private final class BackgroundUpload extends SwingWorker<String, Integer> {
