@@ -6,9 +6,9 @@ Small application to upload multiple images to fzpw.de.
 
 ## Building
 
-You'll need at least Java 11 to build this. Just run `mvn clean package` and you'll get a runnable .jar file in the target folder.
+You'll need at least Java 17 to build this. Just run `mvn clean package` and you'll get a runnable .jar file in the target folder.
 
-To build an installer with a bundled runtime, check `create-windows-package.ps1` for details (will need Java 14 or later).
+To build an installer with a bundled runtime, check `create-windows-package.ps1` for details.
 
 ## License
 
