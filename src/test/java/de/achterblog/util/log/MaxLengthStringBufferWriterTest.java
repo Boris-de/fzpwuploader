@@ -67,7 +67,7 @@ public class MaxLengthStringBufferWriterTest {
   @Test
   public void testInvalidMaxSize() {
     var e = assertThrows(IllegalArgumentException.class,
-                         () -> IOUtils.close(new MaxLengthStringBufferWriter(-1)));
+                         () -> new MaxLengthStringBufferWriter(-1).close());
     assertThat(e.getMessage(), is("maxSize must not be negative"));
   }
 }

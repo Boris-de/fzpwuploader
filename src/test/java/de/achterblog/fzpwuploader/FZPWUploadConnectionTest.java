@@ -19,7 +19,6 @@
 package de.achterblog.fzpwuploader;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Serial;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -31,13 +30,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.jetty.servlet.ServletTester;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,10 +55,6 @@ import com.google.common.jimfs.Jimfs;
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -63,7 +64,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FZPWUploadConnectionTest {
   private static final String URLPART = "/dc-test";
   private static String baseTestUrl;
-  private static ServletTester tester;
+  private static Server server;
   private FZPWUploadConnection connection;
   private static volatile String nextResponse;
   private static volatile Map<String, String> lastRequestParameters;
@@ -75,16 +76,20 @@ public class FZPWUploadConnectionTest {
   public static void setUpClass() throws Exception {
     inMemoryfileSystem = Jimfs.newFileSystem();
 
-    tester = new ServletTester();
-    tester.setContextPath("/");
-    tester.addServlet(TestServlet.class, URLPART);
-    baseTestUrl = tester.createConnector(true) + URLPART;
-    tester.start();
+    server = new Server();
+    ServerConnector connector = new ServerConnector(server);
+    server.addConnector(connector);
+    ServletContextHandler context = new ServletContextHandler(server, "/contextPath");
+    context.setContextPath("/");
+    context.addServlet(TestServlet.class, URLPART);
+    server.start();
+
+    baseTestUrl = "http://localhost:" + connector.getLocalPort() + URLPART;
   }
 
   @AfterAll
   public static void tearDownClass() throws Exception {
-    tester.stop();
+    server.stop();
   }
 
   @BeforeEach
@@ -158,7 +163,7 @@ public class FZPWUploadConnectionTest {
     assertThat(getFieldValue.apply("az").getString(), is("upload_file"));
     assertThat(getFieldValue.apply("command").getString(), is("save"));
     assertThat(getFieldValue.apply("file_type").getString(), is("jpg"));
-    assertArrayEquals(fileContents, IOUtils.toByteArray(getFieldValue.apply("file_upload").getInputStream()));
+    assertArrayEquals(fileContents, getFieldValue.apply("file_upload").get());
   }
 
   @Test
@@ -187,7 +192,7 @@ public class FZPWUploadConnectionTest {
         try {
           FileItemFactory factory = new DiskFileItemFactory();
           ServletFileUpload upload = new ServletFileUpload(factory);
-          lastFileItems = upload.parseRequest(new JakartaRequestContext(req));
+          lastFileItems = upload.parseRequest(req);
         } catch (FileUploadException e) {
           Logger.log(Level.ERROR, "FileUploadException", e);
           resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "FileUploadException");
@@ -209,5 +214,4 @@ public class FZPWUploadConnectionTest {
       resp.getWriter().close();
     }
   }
-
 }
