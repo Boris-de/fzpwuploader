@@ -14,6 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MultiPartBodyPublisherTest {
@@ -65,7 +66,7 @@ public class MultiPartBodyPublisherTest {
       final var subscriber = new ByteBuffersToStringSubscriber();
       final var e = assertThrows(RuntimeIOException.class, () -> build.subscribe(subscriber));
       assertThat(e, instanceOf(RuntimeIOException.class));
-      assertThat(e.getMessage(), is("IOException while generating multi parts: Is a directory"));
+      assertThat(e.getMessage(), startsWith("IOException while generating multi parts:"));
     }
   }
 
