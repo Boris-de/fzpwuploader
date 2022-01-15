@@ -21,7 +21,6 @@ package de.achterblog.fzpwuploader;
 import java.io.IOException;
 import java.io.Serial;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -50,9 +49,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.jimfs.Jimfs;
-
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
@@ -71,12 +67,12 @@ public class FZPWUploadConnectionTest {
   private static volatile Map<String, String> lastRequestParameters;
   private static volatile List<FileUpload> lastFileItems;
   private static volatile List<Cookie> lastCookies;
-  private static FileSystem inMemoryfileSystem;
+
+  @TempDir
+  public static Path tempDir;
 
   @BeforeAll
   public static void setUpClass(@TempDir Path multiPartTempDir) throws Exception {
-    inMemoryfileSystem = Jimfs.newFileSystem();
-
     server = new Server();
     ServerConnector connector = new ServerConnector(server);
     server.addConnector(connector);
@@ -148,7 +144,7 @@ public class FZPWUploadConnectionTest {
   public void testUpload() throws Exception {
     final byte[] fileContents = new byte[]{(byte) 255, (byte) 216, (byte) 97, (byte) 255, (byte) 217};
 
-    final Path testFile = inMemoryfileSystem.getPath("testUpload.test");
+    final Path testFile = tempDir.resolve("testUpload.test");
     Files.write(testFile, fileContents);
 
     nextResponse = "Seite wird geladen, einen Moment bitte...";
@@ -171,7 +167,7 @@ public class FZPWUploadConnectionTest {
 
   @Test
   public void testUploadFindsNoURL() throws Exception {
-    final Path testFile = inMemoryfileSystem.getPath("testUploadFindsNoURL.test");
+    final Path testFile = tempDir.resolve("testUploadFindsNoURL.test");
     Files.write(testFile, new byte[0]);
     nextResponse = "Seite wird geladen, einen Moment bitte...";
     connection.login("", "");
@@ -190,7 +186,7 @@ public class FZPWUploadConnectionTest {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-      lastCookies = Optional.ofNullable(req.getCookies()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+      lastCookies = Optional.ofNullable(req.getCookies()).map(List::of).orElse(List.of());
       if (req.getContentType() != null && req.getContentType().startsWith("multipart/form-data")) {
         try {
           lastFileItems = req.getParts().stream()
