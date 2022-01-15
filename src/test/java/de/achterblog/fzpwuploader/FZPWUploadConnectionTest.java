@@ -20,6 +20,7 @@ package de.achterblog.fzpwuploader;
 
 import java.io.IOException;
 import java.io.Serial;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,17 +30,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -48,6 +48,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Jimfs;
@@ -68,12 +69,12 @@ public class FZPWUploadConnectionTest {
   private FZPWUploadConnection connection;
   private static volatile String nextResponse;
   private static volatile Map<String, String> lastRequestParameters;
-  private static volatile List<FileItem> lastFileItems;
+  private static volatile List<FileUpload> lastFileItems;
   private static volatile List<Cookie> lastCookies;
   private static FileSystem inMemoryfileSystem;
 
   @BeforeAll
-  public static void setUpClass() throws Exception {
+  public static void setUpClass(@TempDir Path multiPartTempDir) throws Exception {
     inMemoryfileSystem = Jimfs.newFileSystem();
 
     server = new Server();
@@ -81,7 +82,9 @@ public class FZPWUploadConnectionTest {
     server.addConnector(connector);
     ServletContextHandler context = new ServletContextHandler(server, "/contextPath");
     context.setContextPath("/");
-    context.addServlet(TestServlet.class, URLPART);
+    context.addServlet(TestServlet.class, URLPART)
+      .getRegistration()
+      .setMultipartConfig(new MultipartConfigElement(multiPartTempDir.toString()));
     server.start();
 
     baseTestUrl = "http://localhost:" + connector.getLocalPort() + URLPART;
@@ -155,15 +158,15 @@ public class FZPWUploadConnectionTest {
     assertEquals(uploadedUrl, nextResponse);
     assertThat(lastFileItems.size(), is(4));
 
-    final Function<String, FileItem> getFieldValue = key -> lastFileItems.stream()
-      .filter(it -> key.equals(it.getFieldName()))
+    final Function<String, FileUpload> getFieldValue = key -> lastFileItems.stream()
+      .filter(it -> key.equals(it.name))
       .findFirst()
       .orElseThrow(() -> new AssertionError("Did not find " + key));
 
     assertThat(getFieldValue.apply("az").getString(), is("upload_file"));
     assertThat(getFieldValue.apply("command").getString(), is("save"));
     assertThat(getFieldValue.apply("file_type").getString(), is("jpg"));
-    assertArrayEquals(fileContents, getFieldValue.apply("file_upload").get());
+    assertArrayEquals(fileContents, getFieldValue.apply("file_upload").content);
   }
 
   @Test
@@ -190,12 +193,12 @@ public class FZPWUploadConnectionTest {
       lastCookies = Optional.ofNullable(req.getCookies()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
       if (req.getContentType() != null && req.getContentType().startsWith("multipart/form-data")) {
         try {
-          FileItemFactory factory = new DiskFileItemFactory();
-          ServletFileUpload upload = new ServletFileUpload(factory);
-          lastFileItems = upload.parseRequest(req);
-        } catch (FileUploadException e) {
-          Logger.log(Level.ERROR, "FileUploadException", e);
-          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "FileUploadException");
+          lastFileItems = req.getParts().stream()
+            .map(it -> new FileUpload(it.getName(), readAll(it), it.getContentType()))
+            .collect(Collectors.toList());
+        } catch (ServletException | IllegalStateException e) {
+          Logger.log(Level.ERROR, "ServletException", e);
+          resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "ServletException: " + e.getMessage());
         }
       } else {
         lastFileItems = Collections.emptyList();
@@ -212,6 +215,25 @@ public class FZPWUploadConnectionTest {
 
       resp.getWriter().append(nextResponse);
       resp.getWriter().close();
+    }
+  }
+
+  private static byte[] readAll(Part part) {
+    try {
+      return part.getInputStream().readAllBytes();
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+
+  private record FileUpload(String name, byte[] content, String contentType) {
+    public String getString() {
+      final var charsetPrefix = "charset=";
+      final var charsetPos = contentType.indexOf(charsetPrefix);
+      if (charsetPos < 0) {
+        throw new IllegalStateException("Cannot get string without a charset");
+      }
+      return new String(content, Charset.forName(contentType.substring(charsetPos + charsetPrefix.length())));
     }
   }
 }

@@ -18,7 +18,6 @@
  */
 package de.achterblog.util.log;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
