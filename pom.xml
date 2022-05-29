@@ -6,7 +6,7 @@
   <packaging>jar</packaging>
   <version>0.3-SNAPSHOT</version>
   <name>fzpwuploader</name>
-  <url>https://achterblog.de</url>
+  <url>https://github.com/Boris-de/fzpwuploader</url>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
