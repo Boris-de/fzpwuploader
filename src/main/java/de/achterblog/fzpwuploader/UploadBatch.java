@@ -26,6 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import de.achterblog.fzpwuploader.UploadConnection.LoginStatus;
 import de.achterblog.util.log.Level;
@@ -65,13 +67,15 @@ public record UploadBatch(String username, String password, UploadBatchCallback 
       }
       for (Map.Entry<Path, Future<String>> cur : futures.entrySet()) {
         try {
-          String url = cur.getValue().get();
+          String url = cur.getValue().get(2, TimeUnit.MINUTES);
           buffer.append(url).append('\n');
           buffer.append(cur.getKey().getFileName()).append("\n\n");
-        } catch (InterruptedException ex) {
+        } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
-        } catch (ExecutionException ex) {
-          Logger.log(Level.ERROR, "Exception while executing upload: ", ex);
+        } catch (ExecutionException | TimeoutException e) {
+          Logger.log(Level.ERROR, "Exception while executing upload: ", e);
+          buffer.append("Failed to upload file").append(cur.getKey().getFileName())
+            .append(" (").append(e.getClass().getSimpleName()).append(": ").append(e.getMessage()).append(")\n\n");
         }
       }
     } catch (UploadException | IOException e) {

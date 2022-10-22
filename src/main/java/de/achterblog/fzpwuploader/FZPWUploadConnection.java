@@ -114,6 +114,7 @@ public class FZPWUploadConnection implements UploadConnection {
       final HttpResponse<String> response = sendRequest(HttpRequest.newBuilder(url)
                                                           .header("Referer", url.toString())
                                                           .header("Content-Type", "multipart/form-data; boundary=" + bodyPublisher.getBoundary())
+                                                          .timeout(Duration.ofMinutes(1))
                                                           .POST(bodyPublisher.build()));
 
       final Matcher matcher = UPLOAD_FILE_NAME_PATTERN.matcher(response.body());
