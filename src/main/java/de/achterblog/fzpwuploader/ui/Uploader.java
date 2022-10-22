@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -41,7 +40,7 @@ import de.achterblog.util.log.Logger;
 
 /**
  * UI implementation of Main window.
- *
+ * <p>
  * (this was initially created with the Netbeans Form editor, but is now just this java file)
  */
 public class Uploader extends JFrame {

@@ -26,7 +26,7 @@ import de.achterblog.util.log.Logger;
 
 /**
  * UI implementation of the Log View Window.
- *
+ * <p>
  * (this was initially created with the Netbeans Form editor, but is now just this java file)
  */
 class LogView extends JDialog {

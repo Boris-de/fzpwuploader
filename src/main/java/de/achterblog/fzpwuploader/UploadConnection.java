@@ -66,7 +66,7 @@ public interface UploadConnection {
 
   /**
    * Logout from the server.
-   *
+   * <p>
    * Calling this method more than once should be possible and it must be possible to call it with
    * any current loginStatus.
    *

@@ -32,7 +32,7 @@ import de.achterblog.util.ApplicationProperties;
 
 /**
  * UI implementation of an ugly AboutBox
- *
+ * <p>
  * (this was initially created with the Netbeans Form editor, but is now just this java file)
  */
 public class AboutBox extends JDialog {
