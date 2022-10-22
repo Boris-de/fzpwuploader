@@ -42,12 +42,12 @@ public record UploadBatch(String username, String password, UploadBatchCallback 
     final UploadConnection con = new FZPWUploadConnection();
     final StringBuilder buffer = new StringBuilder(512);
 
+    final ExecutorService exe = Executors.newSingleThreadExecutor();
     try {
       final LoginStatus loginStatus = con.login(username, password);
       if (loginStatus != UploadConnection.LoginStatus.LOGGED_IN) {
         return "Failed to login user " + username + ": " + loginStatus;
       }
-      final ExecutorService exe = Executors.newSingleThreadExecutor();
       final Map<Path, Future<String>> futures = new HashMap<>();
       for (final Path cur : fileList) {
         Future<String> f = exe.submit(() -> {
@@ -77,6 +77,7 @@ public record UploadBatch(String username, String password, UploadBatchCallback 
     } catch (UploadException | IOException e) {
       Logger.log(Level.ERROR, "Exception in GUI", e);
     } finally {
+      exe.shutdownNow();
       if (!con.logout()) {
         Logger.log(Level.ERROR, "The logout failed, the user may still be logged in");
       }
