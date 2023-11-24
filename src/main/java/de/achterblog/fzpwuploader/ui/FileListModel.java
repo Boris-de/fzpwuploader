@@ -20,7 +20,6 @@ package de.achterblog.fzpwuploader.ui;
 
 import java.io.Serial;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +36,7 @@ class FileListModel extends AbstractListModel<String> implements Iterable<Path> 
   private static final long serialVersionUID = 1L;
 
   private final List<Path> files;
-  static final FileListModel EMPTY_MODEL = new FileListModel(Collections.emptyList());
+  static final FileListModel EMPTY_MODEL = new FileListModel(List.of());
 
   /**
    *

@@ -23,13 +23,11 @@ import java.io.Serial;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -94,7 +92,7 @@ public class FZPWUploadConnectionTest {
   public void setUp() {
     connection = new FZPWUploadConnection(baseTestUrl);
     nextResponse = "";
-    lastRequestParameters = Collections.emptyMap();
+    lastRequestParameters = Map.of();
   }
 
   @AfterEach
@@ -190,13 +188,13 @@ public class FZPWUploadConnectionTest {
         try {
           lastFileItems = req.getParts().stream()
             .map(it -> new FileUpload(it.getName(), readAll(it), it.getContentType()))
-            .collect(Collectors.toList());
+            .toList();
         } catch (ServletException | IllegalStateException e) {
           Logger.log(Level.ERROR, "ServletException", e);
           resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "ServletException: " + e.getMessage());
         }
       } else {
-        lastFileItems = Collections.emptyList();
+        lastFileItems = List.of();
       }
       if (req.getParameter("Username") != null) {
         resp.addHeader("Set-Cookie", "DCForumSessionID=; expires=Thur, 31-Dec-98 12:00:00 GMT; path=/;");

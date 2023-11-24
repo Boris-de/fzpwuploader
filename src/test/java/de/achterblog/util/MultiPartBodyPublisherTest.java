@@ -86,7 +86,7 @@ public class MultiPartBodyPublisherTest {
 
     @Override
     public void onError(Throwable t) {
-      throw t instanceof RuntimeException ? (RuntimeException) t : new IllegalStateException("Subscriber.onError", t);
+      throw t instanceof RuntimeException rte ? rte : new IllegalStateException("Subscriber.onError", t);
     }
 
     @Override
