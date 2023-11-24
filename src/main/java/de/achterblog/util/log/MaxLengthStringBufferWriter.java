@@ -73,7 +73,7 @@ final class MaxLengthStringBufferWriter extends Writer {
 
   @Override
   public void close() {
-    buffer.setLength(0);
+    reset();
   }
 
   void reset() {

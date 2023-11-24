@@ -40,14 +40,10 @@ class FileListModel extends AbstractListModel<String> implements Iterable<Path> 
 
   /**
    *
-   * @throws NullPointerException if {@code files == null}
-   * @throws IllegalStateException if {@code files} contains null
+   * @throws NullPointerException if {@code files == null} or {@code files} contains null
    */
   public FileListModel(List<Path> files) {
     super();
-    if (files.contains(null)) {
-      throw new IllegalStateException("files contains null");
-    }
     this.files = List.copyOf(files); // defensive copy
   }
 
