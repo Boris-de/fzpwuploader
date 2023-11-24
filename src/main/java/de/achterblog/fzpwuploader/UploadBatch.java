@@ -20,8 +20,8 @@ package de.achterblog.fzpwuploader;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,7 +50,7 @@ public record UploadBatch(String username, String password, UploadBatchCallback 
       if (loginStatus != UploadConnection.LoginStatus.LOGGED_IN) {
         return "Failed to login user " + username + ": " + loginStatus;
       }
-      final Map<Path, Future<String>> futures = new HashMap<>();
+      final List<UploadFuture> futures = new ArrayList<>();
       for (final Path cur : fileList) {
         Future<String> f = exe.submit(() -> {
           try {
@@ -63,18 +63,18 @@ public record UploadBatch(String username, String password, UploadBatchCallback 
             throw new UploadException(e.getMessage(), e);
           }
         });
-        futures.put(cur, f);
+        futures.add(new UploadFuture(cur, f));
       }
-      for (Map.Entry<Path, Future<String>> cur : futures.entrySet()) {
+      for (UploadFuture cur : futures) {
         try {
-          String url = cur.getValue().get(2, TimeUnit.MINUTES);
+          String url = cur.future.get(2, TimeUnit.MINUTES);
           buffer.append(url).append('\n');
-          buffer.append(cur.getKey().getFileName()).append("\n\n");
+          buffer.append(cur.path.getFileName()).append("\n\n");
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
         } catch (ExecutionException | TimeoutException e) {
           Logger.log(Level.ERROR, "Exception while executing upload: ", e);
-          buffer.append("Failed to upload file").append(cur.getKey().getFileName())
+          buffer.append("Failed to upload file").append(cur.path.getFileName())
             .append(" (").append(e.getClass().getSimpleName()).append(": ").append(e.getMessage()).append(")\n\n");
         }
       }
@@ -104,5 +104,8 @@ public record UploadBatch(String username, String password, UploadBatchCallback 
      * @param uploaded The file that was <b>not</b> uploaded
      */
     void failed(Path uploaded);
+  }
+
+  private record UploadFuture(Path path, Future<String> future) {
   }
 }
