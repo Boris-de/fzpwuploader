@@ -20,6 +20,7 @@ package de.achterblog.fzpwuploader;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.io.UncheckedIOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
@@ -44,7 +45,6 @@ import java.util.stream.Collectors;
 
 import de.achterblog.util.ApplicationProperties;
 import de.achterblog.util.MultiPartBodyPublisher;
-import de.achterblog.util.RuntimeIOException;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
 
@@ -166,7 +166,7 @@ public class FZPWUploadConnection implements UploadConnection {
         throw new UploadException("Unexpected http-return code: " + status);
       }
       return response;
-    } catch (RuntimeIOException e) {
+    } catch (UncheckedIOException e) {
       throw e.getCause();
     } catch (InterruptedException e) {
       throw new InterruptedIOException(e.getMessage());

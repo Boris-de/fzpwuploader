@@ -2,6 +2,7 @@ package de.achterblog.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -64,8 +65,8 @@ public class MultiPartBodyPublisherTest {
       final var build = publisher.build();
 
       final var subscriber = new ByteBuffersToStringSubscriber();
-      final var e = assertThrows(RuntimeIOException.class, () -> build.subscribe(subscriber));
-      assertThat(e, instanceOf(RuntimeIOException.class));
+      final var e = assertThrows(UncheckedIOException.class, () -> build.subscribe(subscriber));
+      assertThat(e, instanceOf(UncheckedIOException.class));
       assertThat(e.getMessage(), startsWith("IOException while generating multi parts:"));
     }
   }

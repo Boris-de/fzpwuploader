@@ -24,6 +24,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
+import java.io.UncheckedIOException;
 import java.net.http.HttpRequest;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -199,7 +200,7 @@ public class MultiPartBodyPublisher implements Closeable {
             return true;
           }
         } catch (IOException e) {
-          throw new RuntimeIOException("IOException while generating multi parts: " + e.getMessage(), e);
+          throw new UncheckedIOException("IOException while generating multi parts: " + e.getMessage(), e);
         }
       }
       return partIterator.hasNext();
@@ -222,7 +223,7 @@ public class MultiPartBodyPublisher implements Closeable {
         }
         throw new NoSuchElementException();
       } catch (IOException e) {
-        throw new RuntimeIOException("IOException while generating multi parts: " + e.getMessage(), e);
+        throw new UncheckedIOException("IOException while generating multi parts: " + e.getMessage(), e);
       }
     }
 
