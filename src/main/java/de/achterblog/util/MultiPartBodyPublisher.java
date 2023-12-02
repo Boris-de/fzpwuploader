@@ -23,17 +23,16 @@ import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PushbackInputStream;
+import java.io.SequenceInputStream;
 import java.io.UncheckedIOException;
 import java.net.http.HttpRequest;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -49,7 +48,7 @@ public class MultiPartBodyPublisher implements Closeable {
   private final String boundary;
   private final Charset charset;
 
-  private final List<PartsAsBytesIterator> partsAsBytesIterators = new ArrayList<>();
+  private PartInputStreamEnumeration partInputStreamEnumeration = null;
 
   public MultiPartBodyPublisher(Charset charset) {
     this(charset, () -> UUID.randomUUID().toString());
@@ -63,10 +62,9 @@ public class MultiPartBodyPublisher implements Closeable {
   public HttpRequest.BodyPublisher build() {
     validState(!partsList.isEmpty(), "No parts defined yet");
     addEndOfMultiPartPart();
-    return HttpRequest.BodyPublishers.ofByteArrays(() -> {
-      PartsAsBytesIterator partsAsBytesIterator = new PartsAsBytesIterator();
-      partsAsBytesIterators.add(partsAsBytesIterator); // store for cleanup
-      return partsAsBytesIterator;
+    return HttpRequest.BodyPublishers.ofInputStream(() -> {
+      partInputStreamEnumeration = new PartInputStreamEnumeration();
+      return new SequenceInputStream(partInputStreamEnumeration);
     });
   }
 
@@ -93,9 +91,8 @@ public class MultiPartBodyPublisher implements Closeable {
 
   @Override
   public void close() throws IOException {
-    // iterate over a copy to avoid ConcurrentModificationException
-    for (PartsAsBytesIterator partsAsBytesIterator : List.copyOf(partsAsBytesIterators)) {
-      partsAsBytesIterator.close();
+    if (partInputStreamEnumeration != null) {
+      partInputStreamEnumeration.close();
     }
   }
 
@@ -172,59 +169,32 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
-  private class PartsAsBytesIterator implements Iterator<byte[]>, Closeable {
+  private final class PartInputStreamEnumeration implements Enumeration<InputStream>, Closeable {
     private final Iterator<Part> partIterator = partsList.iterator();
-    private final byte[] buffer = new byte[4096];
-    private PushbackInputStream currentStream = null;
+    private InputStream currentStream = null;
 
     @Override
-    public boolean hasNext() {
-      if (currentStream != null) {
-        try {
-          final int read = currentStream.read();
-          if (read >= 0) {
-            currentStream.unread(read);
-            return true;
-          }
-        } catch (IOException e) {
-          throw new UncheckedIOException("IOException while generating multi parts: " + e.getMessage(), e);
-        }
-      }
+    public boolean hasMoreElements() {
       return partIterator.hasNext();
     }
 
     @Override
-    public byte[] next() {
+    public InputStream nextElement() {
       try {
-        if (currentStream != null) {
-          final int read = currentStream.read(buffer);
-          if (read >= 0) {
-            return Arrays.copyOf(buffer, read);
-          }
-          closeCurrentStream();
-        }
-        if (partIterator.hasNext()) {
-          final Part nextPart = partIterator.next();
-          currentStream = new PushbackInputStream(nextPart.asStream());
-          return next();
-        }
-        throw new NoSuchElementException();
+        close();
+        currentStream = partIterator.next().asStream();
+        return currentStream;
       } catch (IOException e) {
-        throw new UncheckedIOException("IOException while generating multi parts: " + e.getMessage(), e);
-      }
-    }
-
-    private void closeCurrentStream() throws IOException {
-      if (currentStream != null) {
-        currentStream.close();
-        currentStream = null;
+        throw new UncheckedIOException("Failed to open stream for next part: " + e.getMessage(), e);
       }
     }
 
     @Override
     public void close() throws IOException {
-      partsAsBytesIterators.remove(this);
-      closeCurrentStream();
+      if (currentStream != null) {
+        currentStream.close();
+        currentStream = null;
+      }
     }
   }
 }

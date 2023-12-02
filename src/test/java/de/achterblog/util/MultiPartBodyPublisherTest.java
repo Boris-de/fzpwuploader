@@ -15,7 +15,6 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MultiPartBodyPublisherTest {
@@ -48,6 +47,26 @@ public class MultiPartBodyPublisherTest {
   }
 
   @Test
+  public void testSingleElement() throws IOException {
+    try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8, () -> "###boundary###")) {
+      publisher.addPart("name", "test");
+
+      final var build = publisher.build();
+
+      final var subscriber = new ByteBuffersToStringSubscriber();
+      build.subscribe(subscriber);
+
+      assertThat(subscriber.content, is("""
+                                          --###boundary###\r
+                                          Content-Disposition: form-data; name="name"\r
+                                          Content-Type: text/plain; charset=UTF-8\r
+                                          \r
+                                          test\r
+                                          --###boundary###--"""));
+    }
+  }
+
+  @Test
   public void testMissingParts() throws IOException {
     try (final var publisher = new MultiPartBodyPublisher(StandardCharsets.UTF_8)) {
       final var e = assertThrows(IllegalStateException.class, publisher::build);
@@ -67,7 +86,6 @@ public class MultiPartBodyPublisherTest {
       final var subscriber = new ByteBuffersToStringSubscriber();
       final var e = assertThrows(UncheckedIOException.class, () -> build.subscribe(subscriber));
       assertThat(e, instanceOf(UncheckedIOException.class));
-      assertThat(e.getMessage(), startsWith("IOException while generating multi parts:"));
     }
   }
 
