@@ -38,10 +38,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 public class MultiPartBodyPublisher implements Closeable {
   private static final String CRLF = "\r\n";
 
   private final List<Part> partsList = new ArrayList<>();
+  @Getter
   private final String boundary;
   private final Charset charset;
 
@@ -64,10 +68,6 @@ public class MultiPartBodyPublisher implements Closeable {
       partsAsBytesIterators.add(partsAsBytesIterator); // store for cleanup
       return partsAsBytesIterator;
     });
-  }
-
-  public String getBoundary() {
-    return boundary;
   }
 
   public MultiPartBodyPublisher addPart(String name, String value) {
@@ -113,14 +113,10 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
+  @RequiredArgsConstructor
   private final class StringPart extends Part {
     private final String name;
     private final String value;
-
-    public StringPart(String name, String value) {
-      this.name = name;
-      this.value = value;
-    }
 
     @Override
     InputStream asStream() {
@@ -133,18 +129,12 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
+  @RequiredArgsConstructor
   private final class FilePart extends Part {
     private final String name;
     private final Path path;
     private final String filename;
     private final String contentType;
-
-    public FilePart(String name, Path path, String filename, String contentType) {
-      this.name = name;
-      this.path = path;
-      this.filename = filename;
-      this.contentType = contentType;
-    }
 
     @Override
     InputStream asStream() throws IOException {
@@ -158,12 +148,9 @@ public class MultiPartBodyPublisher implements Closeable {
     }
   }
 
+  @RequiredArgsConstructor
   private final class FileContentPart extends Part {
     private final Path path;
-
-    public FileContentPart(final Path path) {
-      this.path = path;
-    }
 
     @Override
     InputStream asStream() throws IOException {

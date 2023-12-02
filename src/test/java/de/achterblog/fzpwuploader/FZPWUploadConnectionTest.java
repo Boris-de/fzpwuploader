@@ -49,6 +49,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import lombok.SneakyThrows;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -211,12 +212,9 @@ public class FZPWUploadConnectionTest {
     }
   }
 
+  @SneakyThrows(IOException.class)
   private static byte[] readAll(Part part) {
-    try {
-      return part.getInputStream().readAllBytes();
-    } catch (IOException e) {
-      throw new IllegalStateException(e);
-    }
+    return part.getInputStream().readAllBytes();
   }
 
   private record FileUpload(String name, byte[] content, String contentType) {

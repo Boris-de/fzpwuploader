@@ -24,7 +24,9 @@ import java.util.Properties;
 
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
+import lombok.Getter;
 
+@Getter
 public class ApplicationProperties {
   private final String version;
 
@@ -42,9 +44,5 @@ public class ApplicationProperties {
       Logger.log(Level.ERROR, () -> "Failed to read " + resourceName, e);
     }
     version = tmp.getProperty("version", "unknown");
-  }
-
-  public String getVersion() {
-    return version;
   }
 }
