@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.eclipse.jetty.ee9.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.AfterAll;
@@ -74,9 +74,10 @@ public class FZPWUploadConnectionTest {
     server = new Server();
     ServerConnector connector = new ServerConnector(server);
     server.addConnector(connector);
-    ServletContextHandler context = new ServletContextHandler(server, "/contextPath");
-    context.setContextPath("/");
-    context.addServlet(TestServlet.class, URLPART)
+    ServletContextHandler contextHandler = new ServletContextHandler("/contextPath");
+    server.setHandler(contextHandler);
+    contextHandler.setContextPath("/");
+    contextHandler.addServlet(TestServlet.class, URLPART)
       .getRegistration()
       .setMultipartConfig(new MultipartConfigElement(multiPartTempDir.toString()));
     server.start();
@@ -116,8 +117,8 @@ public class FZPWUploadConnectionTest {
     connection.logout();
     assertThat(connection.getLoginStatus(), is(LoginStatus.LOGGED_OUT));
     assertThat(lastCookies, hasSize(1));
-    assertThat(lastCookies.get(0).getName(), is("DCForumSessionID"));
-    assertThat(lastCookies.get(0).getValue(), is("%%abcdefgh"));
+    assertThat(lastCookies.getFirst().getName(), is("DCForumSessionID"));
+    assertThat(lastCookies.getFirst().getValue(), is("%%abcdefgh"));
 
     nextResponse = "Login Problem: Falscher Username";
     assertThat(connection.login(user, password), is(LoginStatus.REFUSED));
