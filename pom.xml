@@ -95,4 +95,14 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.maven.plugin-tools</groupId>
+        <artifactId>maven-plugin-annotations</artifactId>
+        <version>3.13.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
