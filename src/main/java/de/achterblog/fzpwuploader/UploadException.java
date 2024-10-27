@@ -24,7 +24,7 @@ import java.io.Serial;
  * 
  * @author boris
  */
-class UploadException extends Exception {
+public class UploadException extends Exception {
   @Serial
   private static final long serialVersionUID = -216314219211415219L;
 
