@@ -31,6 +31,7 @@ import javax.swing.*;
 
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A JPanel that paints previews of images that are submitted via this classes
@@ -41,7 +42,7 @@ import de.achterblog.util.log.Logger;
 class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
   private static final int MAX_SIZE = 160;
   private static final Pattern imageFilename = Pattern.compile("\\.(png|jpe?g|gif)$", Pattern.CASE_INSENSITIVE);
-  private transient volatile Image previewImage;
+  private transient volatile @Nullable Image previewImage;
   /** A flag that show if the image changed from the last-rendering */
   private final AtomicBoolean paintNeedsClear = new AtomicBoolean(true);
 
@@ -95,7 +96,7 @@ class ImagePreviewAccessory extends JPanel implements PropertyChangeListener {
     }
   }
 
-  private Image scale(Image image) {
+  private @Nullable Image scale(@Nullable Image image) {
     if (image == null) {
       return null;
     }

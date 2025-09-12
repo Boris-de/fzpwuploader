@@ -37,6 +37,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Matcher;
@@ -47,6 +48,7 @@ import de.achterblog.util.ApplicationProperties;
 import de.achterblog.util.MultiPartBodyPublisher;
 import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of the upload for Freizeitparkweb.de
@@ -59,7 +61,7 @@ public class FZPWUploadConnection implements UploadConnection {
   public static final Pattern UPLOAD_FILE_NAME_PATTERN = Pattern.compile("https?://Freizeitparkweb.de/dcf/User_files/[\\da-f]+.jpg", Pattern.CASE_INSENSITIVE);
 
   private final String baseUrl;
-  private HttpClient client;
+  private @Nullable HttpClient client;
   private LoginStatus loginStatus = LoginStatus.DISCONNECTED;
 
   public FZPWUploadConnection() {
@@ -159,7 +161,8 @@ public class FZPWUploadConnection implements UploadConnection {
         .header("User-Agent", "fzpwuploader/" + ApplicationProperties.INSTANCE.getVersion())
         .timeout(Duration.ofSeconds(30))
         .build();
-      final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(FZPW_CHARSET));
+      final HttpClient clientRef = Objects.requireNonNull(client, "Client is not connected, should not be possible");
+      final HttpResponse<String> response = clientRef.send(request, HttpResponse.BodyHandlers.ofString(FZPW_CHARSET));
       final int status = response.statusCode();
       Logger.log(Level.DEBUG, () -> "URL " + request.uri() + " returned " + status);
       if (status != HttpURLConnection.HTTP_OK) {
@@ -205,7 +208,7 @@ public class FZPWUploadConnection implements UploadConnection {
 
     @Override
     public List<URI> getURIs() {
-      return null;
+      return List.of();
     }
 
     @Override

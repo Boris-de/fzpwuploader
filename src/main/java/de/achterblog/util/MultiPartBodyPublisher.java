@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 
 public class MultiPartBodyPublisher implements Closeable {
   private static final String CRLF = "\r\n";
@@ -48,7 +49,7 @@ public class MultiPartBodyPublisher implements Closeable {
   private final String boundary;
   private final Charset charset;
 
-  private PartInputStreamEnumeration partInputStreamEnumeration = null;
+  private @Nullable PartInputStreamEnumeration partInputStreamEnumeration = null;
 
   public MultiPartBodyPublisher(Charset charset) {
     this(charset, () -> UUID.randomUUID().toString());
@@ -72,7 +73,7 @@ public class MultiPartBodyPublisher implements Closeable {
     return addPart(new StringPart(name, value));
   }
 
-  public MultiPartBodyPublisher addPart(String name, Path path, String filename, String contentType) {
+  public MultiPartBodyPublisher addPart(String name, Path path, @Nullable String filename, String contentType) {
     validState(Files.exists(path), "File does not exist");
     return this.addPart(new FilePart(name, path, filename, contentType))
                .addPart(new FileContentPart(path))
@@ -130,8 +131,8 @@ public class MultiPartBodyPublisher implements Closeable {
   private final class FilePart extends Part {
     private final String name;
     private final Path path;
-    private final String filename;
-    private final String contentType;
+    private final @Nullable String filename;
+    private final @Nullable String contentType;
 
     @Override
     InputStream asStream() throws IOException {
@@ -171,7 +172,7 @@ public class MultiPartBodyPublisher implements Closeable {
 
   private final class PartInputStreamEnumeration implements Enumeration<InputStream>, Closeable {
     private final Iterator<Part> partIterator = partsList.iterator();
-    private InputStream currentStream = null;
+    private @Nullable InputStream currentStream = null;
 
     @Override
     public boolean hasMoreElements() {

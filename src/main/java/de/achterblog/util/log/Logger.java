@@ -18,6 +18,8 @@
  */
 package de.achterblog.util.log;
 
+import org.jspecify.annotations.Nullable;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,7 +34,7 @@ public final class Logger {
     log(level, message, null);
   }
 
-  public static void log(Level level, String message, Throwable e) {
+  public static void log(Level level, String message, @Nullable Throwable e) {
     log(level, () -> message, e);
   }
 
@@ -40,7 +42,7 @@ public final class Logger {
     log(level, messageSupplier, null);
   }
 
-  public static void log(Level level, Supplier<String> messageSupplier, Throwable e) {
+  public static void log(Level level, Supplier<String> messageSupplier, @Nullable Throwable e) {
     if (level.compareTo(LOG_LEVEL) >= 0) {
       final String newLine = System.lineSeparator();
       final PrintStream target = level.compareTo(Level.WARN) >= 0 ? System.err : System.out;
