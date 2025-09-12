@@ -3,5 +3,5 @@ module de.achterblog.fzpwuploader {
   requires java.net.http;
 
   requires static lombok;
-    requires org.jspecify;
+  requires static org.jspecify;
 }
