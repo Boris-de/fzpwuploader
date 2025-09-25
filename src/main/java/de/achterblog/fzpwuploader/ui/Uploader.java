@@ -161,7 +161,7 @@ public class Uploader extends JFrame {
     final var menuFile = new JMenu();
     menuFile.setText("File");
 
-    final var menuItemExit = createMenuItem("Exit", this::menuItemExitActionPerformed);
+    final var menuItemExit = createMenuItem("Exit", _ -> System.exit(0));
     menuItemExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
     menuFile.add(menuItemExit);
 
@@ -169,8 +169,8 @@ public class Uploader extends JFrame {
 
     final var menuQuestionMark = new JMenu();
     menuQuestionMark.setText("?");
-    menuQuestionMark.add(createMenuItem("Log", this::menuItemLogActionPerformed));
-    menuQuestionMark.add(createMenuItem("About", this::menuItemAboutActionPerformed));
+    menuQuestionMark.add(createMenuItem("Log", _ -> new LogView(this).setVisible(true)));
+    menuQuestionMark.add(createMenuItem("About", _ -> new AboutBox(this).setVisible(true)));
 
     menuBar.add(menuQuestionMark);
     return menuBar;
@@ -183,7 +183,7 @@ public class Uploader extends JFrame {
     return menuItem;
   }
 
-  private void buttonSelectActionPerformed(ActionEvent evt) {
+  private void buttonSelectActionPerformed(ActionEvent ignoredEvt) {
     final var chooser = new JFileChooser();
     final var filter = new FileNameExtensionFilter("Images", "jpg", "jpeg");
     chooser.setFileFilter(filter);
@@ -209,7 +209,7 @@ public class Uploader extends JFrame {
     return files;
   }
 
-  private void buttonUploadActionPerformed(ActionEvent evt) {
+  private void buttonUploadActionPerformed(ActionEvent ignoredEvt) {
     if (textFieldUsername.getText().isEmpty() || textFieldPassword.getPassword().length == 0) {
       JOptionPane.showMessageDialog(this, "Please enter the login details", "Error", JOptionPane.ERROR_MESSAGE);
       return;
@@ -235,18 +235,6 @@ public class Uploader extends JFrame {
     });
     activityProgressBar.setVisible(true);
     task.execute();
-  }
-
-  private void menuItemExitActionPerformed(ActionEvent evt) {
-    System.exit(0);
-  }
-
-  private void menuItemAboutActionPerformed(ActionEvent evt) {
-    new AboutBox(this).setVisible(true);
-  }
-
-  private void menuItemLogActionPerformed(ActionEvent evt) {
-    new LogView(this).setVisible(true);
   }
 
   private static List<Path> getSelectedPaths(JFileChooser chooser) {
