@@ -34,7 +34,7 @@ import de.achterblog.util.log.Logger;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A JPanel that paints previews of images that are submitted via this classes
+ * A JPanel that paints previews of images that are submitted via this class
  * PropertyChangeListener-methods.
  *
  * @author boris
