@@ -39,7 +39,7 @@ jobs:
         }
         .\create-windows-package.ps1 "target/fzpwuploader-${full_version}.jar" "${version}" server
     - name: Archive installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: fzpwuploader.exe
         path: ./*.exe
