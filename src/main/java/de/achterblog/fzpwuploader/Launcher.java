@@ -27,7 +27,7 @@ import de.achterblog.util.log.Level;
 import de.achterblog.util.log.Logger;
 
 public class Launcher {
-  public static void main(String[] args) {
+  static void main() {
     setLookAndFeel();
 
     EventQueue.invokeLater(() -> new Uploader().setVisible(true));
