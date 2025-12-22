@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Set up JDK
       uses: actions/setup-java@v5
       with:
@@ -39,7 +39,7 @@ jobs:
         }
         .\create-windows-package.ps1 "target/fzpwuploader-${full_version}.jar" "${version}" server
     - name: Archive installer
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: fzpwuploader.exe
         path: ./*.exe
