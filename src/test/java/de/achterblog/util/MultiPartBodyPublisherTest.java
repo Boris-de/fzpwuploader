@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MultiPartBodyPublisherTest {
@@ -84,8 +83,11 @@ public class MultiPartBodyPublisherTest {
       final var build = publisher.build();
 
       final var subscriber = new ByteBuffersToStringSubscriber();
-      final var e = assertThrows(UncheckedIOException.class, () -> build.subscribe(subscriber));
-      assertThat(e, instanceOf(UncheckedIOException.class));
+      final var e = assertThrows(RuntimeException.class, () -> build.subscribe(subscriber));
+      if (!(e instanceof UncheckedIOException)) {
+        // java >=26
+        assertThat(e.getCause(), instanceOf(IOException.class));
+      }
     }
   }
 
