@@ -1,3 +1,9 @@
+# Discontinued
+
+*This project is discontinued*.
+
+With the updated forum software on fzpw it is now possible to easily drag&drop pictures, so there is no need for this specific application anymore.
+
 # fzpwuploader
 
 Small application to upload multiple images to fzpw.de.
